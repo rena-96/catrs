@@ -32,12 +32,14 @@ def countmatrix(M, avg=1):
     M = norm_rows(M, avg)
     count = M[:-1,:].T.dot(M[1:,:])
     return norm_rows(count)
+
 a = np.random.rand(4,4) - np.random.rand(4,4)
 count_a = countmatrix(a)
 #%%
 trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
-
-count_tm = countmatrix(trialmtx, avg=2)
+[x**2 for x in ]
+trialmtxpos = trialmtx-np.amin(trialmtx)
+count_tm = countmatrix(trialmtxpos)
 plt.imshow(count_tm)
 plt.colorbar()
 plt.show()
