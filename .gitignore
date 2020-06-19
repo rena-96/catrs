@@ -16,6 +16,9 @@
 *.egg-info
 
 .ipynb_checkpoints
-docs/_build
+#docs/_build
 
 report.xml
+#ignore spectral data
+br_py2_exec400.txt
+iso_br_al_cor_py2_400nm_ex_ir.txt
