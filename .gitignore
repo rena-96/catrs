@@ -1,0 +1,21 @@
+# ignore compiled pythonfiles
+*.pyc
+
+# pytest cache files
+.pytest_cache
+
+# vscode ide files
+.vscode
+*.code-workspace
+
+.DS_Store
+
+.tox
+.coverage
+
+*.egg-info
+
+.ipynb_checkpoints
+docs/_build
+
+report.xml
