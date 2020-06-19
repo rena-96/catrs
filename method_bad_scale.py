@@ -27,7 +27,7 @@ def three_states_system(M, avg):
     M_new = np.zeros(M_avg.shape)
     [1 for x in if x<0.]
 #%%
-trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir')[1:,1:]
+trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
 
 smt = avg_spectrum(trialmtx, 4)
 #%%

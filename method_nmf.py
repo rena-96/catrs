@@ -55,7 +55,7 @@ def pcca_Umodified(Uit):
  
 #%%
 #trialmtx = np.random.rand(20,10)
-trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir')[1:,1:]
+trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
 
 ss, Us, Uits = make_Uit(trialmtx,8)
 #%%
