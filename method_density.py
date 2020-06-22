@@ -34,7 +34,7 @@ def three_states_system(M):
             if M[i,j]>0.2:
                 M_copy[i,j] = 1.
                 
-            elif abs(M[i,j])<0.01:
+            elif abs(M[i,j])<0.1:
                 M_copy[i,j] = 2.
             else:
                 M_copy[i , j] = 3.
@@ -54,7 +54,7 @@ plt.imshow(trialmtx, cmap='inferno', aspect='auto')
 plt.colorbar()
 plt.title("spectrum")
 plt.show()
-plt.imshow(red_mtx, cmap="tab10", aspect = "auto")
+plt.imshow(red_mtx, cmap="inferno",aspect = "auto")
 plt.colorbar()
 plt.title("reduced three states system")
 plt.show()
@@ -74,3 +74,4 @@ plt.imshow(chi_k, cmap="inferno", aspect="auto")
 plt.title("$\chi$ from count matrix")
 plt.colorbar()
 plt.show()
+
