@@ -28,32 +28,49 @@ def norm_rows(M, avg=1):
     return M/np.sum(M, axis =0)
 
 def three_states_system(M):
+    M_copy = np.zeros(M.shape)
     for i in range(M.shape[0]):
         for j in range(M.shape[1]):
             if M[i,j]>0.2:
-                M[i,j] = 1.
+                M_copy[i,j] = 1.
                 
-            elif abs(a[i,j])<0.2:
-                M[i,j] = 2.
+            elif abs(M[i,j])<0.01:
+                M_copy[i,j] = 2.
             else:
-                M[i , j] = 3.
-    return(M)
+                M_copy[i , j] = 3.
+    return(M_copy)
 def countmatrix(M, avg=1):
     M = norm_rows(M, avg)
     count = M[:-1,:].T.dot(M[1:,:])
     return norm_rows(count)
-
-a = np.random.rand(4,4) - np.random.rand(4,4)
-count_a = countmatrix(a)
+#
+#a = np.random.rand(4,4) - np.random.rand(4,4)
+#count_a = countmatrix(a)
 #%%
 trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
-[x**2 for x in ]
-trialmtxpos = trialmtx-np.amin(trialmtx)
-count_tm = countmatrix(trialmtxpos)
+red_mtx = three_states_system(trialmtx)
+#trialmtxpos = trialmtx-np.amin(trialmtx)
+plt.imshow(trialmtx, cmap='inferno', aspect='auto')
+plt.colorbar()
+plt.title("spectrum")
+plt.show()
+plt.imshow(red_mtx, cmap="tab10", aspect = "auto")
+plt.colorbar()
+plt.title("reduced three states system")
+plt.show()
+count_tm = countmatrix(red_mtx, 1)
 plt.imshow(count_tm)
+plt.title("count matrix from 3 states system, $\tau=1$")
 plt.colorbar()
 plt.show()
 #%%
-mtx2 = trialmtx.T.dot(trialmtx)
-plt.imshow(countmatrix(mtx2, avg=3))
+#mtx2 = trialmtx.T.dot(trialmtx)
+#plt.imshow(countmatrix(mtx2, avg=3))
+
+#plt.show()
+#%%
+chi_k = cmdtools.pcca(count_tm, 4)
+plt.imshow(chi_k, cmap="inferno", aspect="auto")
+plt.title("$\chi$ from count matrix")
+plt.colorbar()
 plt.show()

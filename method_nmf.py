@@ -78,6 +78,6 @@ plt.imshow(trialmtx)
 plt.colorbar()
 plt.show()
 #%%
-plt.imshow(np.dot(W_rec,H_rec)-trialmtx)
+plt.imshow(abs(np.dot(W_rec,H_rec)-trialmtx))
 plt.colorbar()
 print('max error:', np.amax(abs(np.dot(W_rec,H_rec)-trialmtx)), 'min error:', np.amin(abs(np.dot(W_rec,H_rec)-trialmtx)))
