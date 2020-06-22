@@ -57,7 +57,7 @@ def pcca_Umodified(Uit):
 #trialmtx = np.random.rand(20,10)
 trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
 
-ss, Us, Uits = make_Uit(trialmtx,8)
+ss, Us, Uits = make_Uit(trialmtx,4)
 #%%
 parameters = [-0.00001, -100., 100., .1, 10.]
 

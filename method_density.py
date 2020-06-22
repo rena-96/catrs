@@ -27,7 +27,17 @@ def norm_rows(M, avg=1):
     M = avg_spectrum(M,avg)
     return M/np.sum(M, axis =0)
 
-
+def three_states_system(M):
+    for i in range(M.shape[0]):
+        for j in range(M.shape[1]):
+            if M[i,j]>0.2:
+                M[i,j] = 1.
+                
+            elif abs(a[i,j])<0.2:
+                M[i,j] = 2.
+            else:
+                M[i , j] = 3.
+    return(M)
 def countmatrix(M, avg=1):
     M = norm_rows(M, avg)
     count = M[:-1,:].T.dot(M[1:,:])
