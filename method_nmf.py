@@ -69,54 +69,22 @@ def pcca_Umodified(Uit):
  
 
 def nmf(M, r = 3, params = [1,1,1,1,1]):
+    """Method of NMF withouth separability assumption. Use notation of 
+    paper   ADD DOI WHEN IS PUBLISHED"""
     _, _, Uit = make_Uit(M, int(r))
     chi, Uitgm, A = pcca_Umodified(Uit)
-    A_optimized = find_Aopt(A, Uit, M, params)
+    A_optimized = find_Aopt(A, Uitgm, M, params)
     H_r = np.dot(Uitgm, A_optimized).T
     H_r_mt = np.dot(Uitgm[:-1,:], A_optimized)
     H_r_pt = np.dot(Uitgm[1:,:], A_optimized)
     W_r = np.dot(M, pinv(H_r))
     P_r = np.dot(pinv(H_r_mt),H_r_pt)
     M_r = np.dot(W_r, H_r)
-    return(A_optimized, Uitgm, H_r, W_r, P_r, M_r)
-    #%%
-
-trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
-
-ss, Us, Uits = make_Uit(trialmtx,4)
-#%%
-parameters = [-0.00001, -100., 100., .1, 10.]
+    return(M_r, W_r, H_r, P_r, A_optimized, chi, Uitgm )
 
 
-chis, Uitsgm, As = pcca_Umodified(Uits)
-#%%
-Asopt = find_Aopt(As, Uitsgm, trialmtx, parameters)
 
-#%%
-H_rec = np.dot(Uitsgm, Asopt).T
-W_rec = np.dot(trialmtx,pinv(H_rec))
-P_rec = np.dot(pinv(np.dot(Uitsgm[:-1,:], Asopt)), np.dot(Uitsgm[1:,:], Asopt))
-#%%
-plt.subplot(1, 2, 1)
-plt.imshow(np.dot(W_rec,H_rec))
-plt.subplot(1, 2, 2)
-plt.imshow(trialmtx)
-plt.colorbar()
-plt.show()
-#%%
-plt.imshow(abs(np.dot(W_rec,H_rec)-trialmtx))
-plt.colorbar()
-print('max error:', np.amax(abs(np.dot(W_rec,H_rec)-trialmtx)), 'min error:', np.amin(abs(np.dot(W_rec,H_rec)-trialmtx)))
-plt.imshow(H_rec, aspect= "auto")
-plt.show()
-plt.imshow(W_rec, aspect= "auto")
-#%%
-#for i in range(4):
-#    plt.plot(chi_k.T.dot(W_rec[i,:]))
-#    #%%
-#dd = pinv(chi_k).dot(trialmtx.T)
-#plt.imshow(dd,aspect="auto")
-#plt.show()
-plt.imshow(H_rec, aspect= "auto")
+
+
 
     
