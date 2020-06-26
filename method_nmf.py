@@ -67,7 +67,20 @@ def pcca_Umodified(Uit):
     return chi, Uit, A
    
  
-#%%
+
+def nmf(M, r = 3, params = [1,1,1,1,1]):
+    _, _, Uit = make_Uit(M, int(r))
+    chi, Uitgm, A = pcca_Umodified(Uit)
+    A_optimized = find_Aopt(A, Uit, M, params)
+    H_r = np.dot(Uitgm, A_optimized).T
+    H_r_mt = np.dot(Uitgm[:-1,:], A_optimized)
+    H_r_pt = np.dot(Uitgm[1:,:], A_optimized)
+    W_r = np.dot(M, pinv(H_r))
+    P_r = np.dot(pinv(H_r_mt),H_r_pt)
+    M_r = np.dot(W_r, H_r)
+    return(A_optimized, Uitgm, H_r, W_r, P_r, M_r)
+    #%%
+
 trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
 
 ss, Us, Uits = make_Uit(trialmtx,4)
