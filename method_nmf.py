@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.linalg import svd, pinv
 from scipy.optimize import fmin
 import cmdtools
-#%%
+
 
 
 def make_Uit(M, r):
@@ -80,11 +80,4 @@ def nmf(M, r = 3, params = [1,1,1,1,1]):
     W_r = np.dot(M, pinv(H_r))
     P_r = np.dot(pinv(H_r_mt),H_r_pt)
     M_r = np.dot(W_r, H_r)
-    return(M_r, W_r, H_r, P_r, A_optimized, chi, Uitgm )
-
-
-
-
-
-
-    
+    return(M_r, W_r, H_r, P_r, A_optimized, chi, Uitgm )    
