@@ -68,9 +68,10 @@ def pcca_Umodified(Uit):
    
  
 #%%
-trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
+data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
+trialmtx = data[1:,1:]
 
-ss, Us, Uits = make_Uit(trialmtx,4)
+ss, Us, Uits = make_Uit(trialmtx,6)
 #%%
 parameters = [-0.00001, -100., 100., .1, 10.]
 
@@ -104,6 +105,6 @@ plt.imshow(W_rec, aspect= "auto")
 #dd = pinv(chi_k).dot(trialmtx.T)
 #plt.imshow(dd,aspect="auto")
 #plt.show()
-plt.imshow(H_rec, aspect= "auto")
+
 
     
