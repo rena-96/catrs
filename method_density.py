@@ -77,7 +77,7 @@ plt.show()
 
 #plt.show()
 #%%
-Chi = cmdtools.pcca(count_tm, 4)
+Chi = cmdtools.pcca(count_tm, 3)
 #plt.imshow(chi_k, cmap="inferno", aspect= "auto", interpolation= "nearest")
 #plt.title("$\chi$ from count matrix")
 #plt.colorbar()
