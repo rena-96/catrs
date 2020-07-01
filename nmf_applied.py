@@ -17,7 +17,7 @@ trialmtx = data[1:,1:]
 
 parameters = [-0.00001, -100., 100., .1, 10.]
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx[:,:],4, parameters) 
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx[45:,:],5, parameters) 
 #%%
 plt.figure(figsize=(13,7))
 plt.subplot(1, 2, 1)
@@ -35,10 +35,10 @@ plt.show()
 
 #%%
 plt.figure(figsize=(10,5))
-plt.imshow(abs(np.dot(W_rec,H_rec)-trialmtx[:,:]))
+plt.imshow(abs(np.dot(W_rec,H_rec)-trialmtx[45:,:])/trialmtx[45:,:])
 plt.colorbar()
 plt.show()
-print('max error:', np.amax(abs(np.dot(W_rec,H_rec)-trialmtx[:,:])), 'min error:', np.amin(abs(np.dot(W_rec,H_rec)-trialmtx[:,:])))
+print('max error:', np.amax(abs(np.dot(W_rec,H_rec)-trialmtx[45:,:])), 'min error:', np.amin(abs(np.dot(W_rec,H_rec)-trialmtx[45:,:])))
 plt.imshow(H_rec, aspect= "auto", interpolation="nearest")
 plt.show()
 plt.imshow(W_rec, aspect= "auto", interpolation="nearest")
@@ -54,7 +54,7 @@ plt.title("Plot $\chi$")
 for i in range(len(Chi.T)):
     plt.plot(Chi.T[i], label=i)
     plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
-#    plt.show()
+plt.grid()
 plt.legend()
 plt.xlim(400,100) #flip the data
 plt.xlabel("$\lambda$/nm")
