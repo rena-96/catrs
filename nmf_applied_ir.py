@@ -8,6 +8,7 @@ Created on Fri Jun 26 14:36:57 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from method_nmf import nmf
+from scipy.optimize import curve_fit
 #%%
 data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 #data = np.loadtxt("br_py2_exec400.txt")
@@ -35,7 +36,7 @@ plt.show()
 
 #%%
 plt.figure(figsize=(10,5))
-plt.imshow(abs(np.dot(W_rec,H_rec)-trialmtx[101:,:]))
+plt.imshow((np.dot(W_rec,H_rec)-trialmtx[101:,:])/trialmtx[101:,:])
 plt.colorbar()
 plt.show()
 print('max error:', np.amax(abs(np.dot(W_rec,H_rec)-trialmtx[101:,:])), 'min error:', np.amin(abs(np.dot(W_rec,H_rec)-trialmtx[101:,:])))
@@ -70,16 +71,38 @@ plt.xlabel("$\lambda$/nm")
 plt.ylabel("value of the column vector")
 plt.show()
 #%%
-plt.figure(figsize=(14,4))
-plt.title("Plot $\chi$")
+#plt.figure(figsize=(14,4))
+#plt.title("Plot $\chi$")
+#for i in range(len(Chi.T)):
+#    plt.figure(figsize=(14,4))
+#    plt.title("Plot $\chi$")
+#    plt.plot(Chi.T[i], label=i)
+#    plt.xticks(np.arange(len(data[0,1:]), step=10),labels=np.round(data[0,1::10],1))
+#    plt.grid()
+#    plt.legend()
+#    plt.xlim(100,0) #flip the data
+#    plt.xlabel("$\lambda$/nm")
+#    plt.ylabel("value of the column vector")
+#    plt.show()
 for i in range(len(Chi.T)):
     plt.figure(figsize=(14,4))
-    plt.title("Plot $\chi$")
-    plt.plot(Chi.T[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=10),labels=np.round(data[0,1::10],1))
+    plt.title("Plot $W_{rec}$")
+    plt.plot(W_rec.T[i], label=i)
+    plt.xticks(np.arange(len(data[102:,0]), step=10),labels=np.round(data[102::10,0],1))
     plt.grid()
     plt.legend()
-    plt.xlim(100,0) #flip the data
-    plt.xlabel("$\lambda$/nm")
+    #plt.xlim(100,0) #flip the data
+    plt.xlabel("$t/ps")
     plt.ylabel("value of the column vector")
     plt.show()
+    #%%
+def tau(x,a):
+    return(np.exp(-x/a))
+    #%%
+taus = []
+for i in range(W_rec.shape[1]):
+    taus.append(curve_fit(tau,data[102:,0], W_rec.T[i] )[0])
+#%%
+plt.scatter(UitGramSchmidt.T[0]-1,np.arange(0, Chi.shape[0]))
+plt.scatter(Chi.T[1],np.arange(0, Chi.shape[0]))
+plt.scatter(Chi.T[2],np.arange(0, Chi.shape[0]))
