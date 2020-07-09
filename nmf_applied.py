@@ -112,3 +112,9 @@ for i in [0,1,2,3,4]:
 plt.legend()
 from scipy.linalg import svd
 U,S,V = svd(trialmtx)
+#%%
+#from scipy.optimize import curve_fit
+#plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")
+
+#fit = curve_fit(lambda t,a,b: a+b*np.exp(t),  np.arange(141),  data[40:,0])
+
