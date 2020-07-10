@@ -54,7 +54,7 @@ plt.subplot(1, 2, 1)
 plt.title("Plot $\chi$")
 for i in range(len(Chi.T)):
     plt.plot(Chi.T[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=10),labels=np.round(data[0,1::10],1))
+    plt.xticks(np.arange(len(data[0,1:]), step=10),labels=np.round(data[0,102::10],1))
 plt.grid()
 plt.legend()
 plt.xlim(100,0) #flip the data
@@ -64,7 +64,7 @@ plt.subplot(1, 2, 2)
 plt.title("Plot $H_{rec}$")
 for i in range(len(Chi.T)):
     plt.plot(H_rec[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=10),labels=np.round(data[0,1::10],1))
+    plt.xticks(np.arange(len(data[0,1:]), step=10),labels=np.round(data[0,102::10],1))
 plt.legend()
 plt.xlim(100,0)
 plt.xlabel("$\lambda$/nm")
@@ -106,3 +106,20 @@ for i in range(W_rec.shape[1]):
 plt.scatter(UitGramSchmidt.T[0]-1,np.arange(0, Chi.shape[0]))
 plt.scatter(Chi.T[1],np.arange(0, Chi.shape[0]))
 plt.scatter(Chi.T[2],np.arange(0, Chi.shape[0]))
+#%%
+plt.figure(figsize=(14,16))
+num = 321
+for i in range(len(Chi.T)):
+#    plt.figure(figsize=(10,4))
+    
+    plt.subplot(num)
+    plt.plot(Chi.T[i], label=i)
+    plt.xticks(np.arange(len(data[0,1:]), step=10),labels=np.round(data[0,102::10],1))
+    plt.grid()
+    plt.legend()
+    plt.title("$\chi$_%d"%i)
+   # plt.xlim(400,80) #flip the data
+    plt.xlabel("$\lambda$/nm")
+    plt.ylabel("value of the column vector")
+    num+=1
+plt.show()

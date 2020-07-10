@@ -12,13 +12,13 @@ from tools import norm_rows
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt("br_py2_exec400.txt")
-trialmtx = data[1:,1:]
+trialmtx = data[44:,1:]
 #for i in range(trialmtx.shape[0]):
 #    trialmtx[i,:]-=trialmtx[95,:]
 
 parameters = [0, -100., 100., 1., 10.]
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx[43:,:],5, parameters) 
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx.T,5, parameters) 
 #%%
 #plt.figure(figsize=(13,7))
 #plt.subplot(1, 2, 1)
@@ -36,10 +36,10 @@ M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx[43:,:],5, 
 
 #%%
 plt.figure(figsize=(10,5))
-#plt.imshow(abs(np.dot(W_rec,H_rec)-trialmtx[43:,:])/trialmtx[43:,:])
+#plt.imshow(abs(np.dot(W_rec,H_rec)-trialmtx)/trialmtx)
 #plt.colorbar()
 #plt.show()
-print('max error:', np.amax(abs(np.dot(W_rec,H_rec)-trialmtx[43:,:])), 'min error:', np.amin(abs(np.dot(W_rec,H_rec)-trialmtx[43:,:])))
+#print('max error:', np.amax(abs(np.dot(W_rec,H_rec)-trialmtx)), 'min error:', np.amin(abs(np.dot(W_rec,H_rec)-trialmtx)))
 plt.imshow(H_rec, aspect= "auto", interpolation="nearest")
 plt.show()
 plt.imshow(W_rec, aspect= "auto", interpolation="nearest")
@@ -49,46 +49,55 @@ plt.imshow(Chi.T, aspect= "auto", interpolation= "nearest")
 plt.imshow(H_rec, aspect= "auto", interpolation="nearest")
 
 #%%
-plt.figure(figsize=(14,4))
+plt.figure(figsize=(15,4))
+plt.suptitle('NMF&PCCA+ analysis from 250 fs', fontsize=16)
 plt.subplot(1, 2, 1)
 plt.title("Plot $\chi$")
 for i in range(len(Chi.T)):
     plt.plot(Chi.T[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=20),labels=np.round(data[0,1::20],1))
+    plt.xticks(np.arange(len(data[0,1:]), step=25),labels=np.round(data[0,1::25],1))
 plt.grid()
 plt.legend()
 plt.xlim(400,100) #flip the data
 plt.xlabel("$\lambda$/nm")
-plt.ylabel("value of the column vector")
+plt.ylabel("$\chi$[i]")
 plt.subplot(1, 2, 2)
-plt.title("Plot $H_{rec}$")
+plt.title("Plot $W_{rec}$")
 for i in range(len(Chi.T)):
-    plt.plot(H_rec[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
+    plt.plot(W_rec.T[i], label=i)
+   # plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
+plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
 plt.legend()
-plt.xlim(400,100)
-plt.xlabel("$\lambda$/nm")
-plt.ylabel("value of the column vector")
+plt.grid()
+#plt.xlim(400,100)
+plt.xlabel("t/ps")
+plt.ylabel("$W_{rec}$[i]")
 plt.show()
 #%%
+plt.figure(figsize=(14,16))
+num = 321
 for i in range(len(Chi.T)):
-    plt.figure(figsize=(10,4))
+#    plt.figure(figsize=(10,4))
+    
+    plt.subplot(num)
     plt.plot(Chi.T[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=20),labels=np.round(data[0,1::20]))
+    plt.xticks(np.arange(len(data[0,44:]), step=30),labels=np.round(data[0,44::30]))
     plt.grid()
     plt.legend()
+    plt.title("$\chi$_%d"%i)
     plt.xlim(400,80) #flip the data
     plt.xlabel("$\lambda$/nm")
     plt.ylabel("value of the column vector")
-    plt.show()
+    num+=1
+plt.show()
     #%%
-plt.plot(trialmtx[179,:]/np.sum(trialmtx[179,:])*60)
-plt.plot(Chi.T[3,:]-0.5)
-plt.xlim(400,80)
-#%%
-plt.plot(trialmtx[118,:]/np.sum(trialmtx[118,:])*60)
-plt.plot(Chi.T[0,:]-0.3)
-plt.xlim(400,80)
+#plt.plot(trialmtx[179,:]/np.sum(trialmtx[179,:])*60)
+#plt.plot(Chi.T[3,:]-0.5)
+#plt.xlim(400,80)
+##%%
+#plt.plot(trialmtx[118,:]/np.sum(trialmtx[118,:])*60)
+#plt.plot(Chi.T[0,:]-0.3)
+#plt.xlim(400,80)
 #%%
 #for j in [44,120,160,179]:
 #    plt.plot(trialmtx[j,:]/np.sum(trialmtx[j,:])*60)
@@ -96,22 +105,22 @@ plt.xlim(400,80)
 plt.figure(figsize=(10,4))
 for i in [0,1,2,3,4]:
    
-    plt.plot(Chi.T[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=20),labels=np.round(data[0,1::20]))
-
-plt.legend()
-plt.xlim(400,80) #flip the data
+    plt.plot(H_rec[i], label=i)
+    #plt.xticks(np.arange(len(data[0,1:]), step=20),labels=np.round(data[0,1::20]))
+plt.title("$\chi$,analysis from 250 fs")
+#plt.legend()
+#plt.xlim(400,80) #flip the data
 plt.xlabel("$\lambda$/nm")
 plt.ylabel("value of the column vector")
+plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
+plt.legend()
 plt.grid()
+#plt.xlim(400,100)
+plt.xlabel("t/ps")
+
 plt.show()
 #%%
-for i in [0,1,2,3,4]:
-   # plt.figure(figsize=(10,4))
-    plt.plot(W_rec.T[i], label=i)
-plt.legend()
-from scipy.linalg import svd
-U,S,V = svd(trialmtx)
+
 #%%
 #from scipy.optimize import curve_fit
 #plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")
