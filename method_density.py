@@ -82,3 +82,6 @@ for i in range(len(Chi.T)):
     plt.show()
 #%%
 Pc = np.linalg.pinv(Chi).dot(count_tm.dot(Chi))
+#%%
+diff_lambda = abs(data[0,1:-1]-data[0,2:])
+plt.plot(np.arange(len(diff_lambda)),diff_lambda, "-o")
