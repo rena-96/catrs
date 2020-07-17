@@ -26,3 +26,7 @@ def norm_rows(M, avg=1):
     of equal importance'''
     M = avg_spectrum(M,avg)
     return M/np.sum(M, axis =0)
+
+def norm_lambda(M, lambdas):
+    max_lambda = np.amax(lambdas[:-1]-lambdas[1:])
+    return new_M
