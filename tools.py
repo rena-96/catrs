@@ -27,6 +27,25 @@ def norm_rows(M, avg=1):
     M = avg_spectrum(M,avg)
     return M/np.sum(M, axis =0)
 
-def norm_lambda(M, lambdas):
+def norm_vis(M, lambdas):
     max_lambda = np.amax(lambdas[:-1]-lambdas[1:])
+    count = 0
+    while count < len(lambdas):
+        diff = 0
+    for i in range(last)
+        while abs(diff- max_lambda) > 0.3:
+            
+        
     return new_M
+
+def norm_IR( lambdas):
+    new_M = []
+    max_lambda = np.amax(lambdas[:-1]-lambdas[1:])
+    for i in range(len(lambdas)-1):
+        diff = abs(lambdas[i]-lambdas[i+1])
+        if abs(diff - max_lambda)<= 0.2*max_lambda:
+            new_M.append(i)
+        else:
+            continue
+    return(new_M)
+    
