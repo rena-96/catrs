@@ -30,7 +30,7 @@ def norm_IR( lambdas):
     while count < (len(lambdas)-1):
         
         diff = abs(lambdas[count]-lambdas[count+1])
-        print(abs(diff))
+       # print(abs(diff))
         if abs(diff - max_lambda)<= 0.4*max_lambda:
             new_M.append(count)
             count+=1
@@ -38,5 +38,7 @@ def norm_IR( lambdas):
             new_M.append(count+1)
             count+=2
     return(new_M)
+
+    
 new_ir = norm_IR(spectrum2[0,1:])
 new_diff = abs(spectrum2[0,new_ir[:-1]]-spectrum2[0,new_ir[1:]])
