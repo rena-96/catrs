@@ -49,7 +49,7 @@ def norm_IR( lambdas):
             continue
     return(new_M)
     
-def pi_vis(lambdas):
+def pi_pcca(lambdas):
     """Compute the weights of the time-resolved spectrum for a specific 
     value of lambda to consider in the PCCA+ algorithm. The smallest 
     wavelength difference is taken as unity and the differences between 

@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.linalg import svd, pinv
 from scipy.optimize import fmin
 import cmdtools
+from tools import pi_pcca
 
 
 
@@ -56,10 +57,13 @@ def find_Aopt(A, Uit, M, params):
     dim =  int(np.sqrt(A_opt_flattered.shape[0]))
     return A_opt_flattered.reshape(dim,dim)
 
-def pcca_Umodified(Uit):
+def pcca_Umodified(Uit, lambdas, pi="uniform"):
     """pcca+ with the modified dominant left sing vectors"""
     m = np.shape(Uit)[0]
-    pi=np.ones(m)*1/float(m)
+    if pi=="uniform":
+        pi = np.ones(m)*1/float(m)
+    else:
+        pi = pi_pcca(lambdas)
     Uit = cmdtools.analysis.pcca.gramschmidt(Uit, pi)
     optim = cmdtools.analysis.optimization.Optimizer()
     A = optim.solve(Uit, pi)
