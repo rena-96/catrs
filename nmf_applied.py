@@ -13,12 +13,13 @@ from tools import norm_rows
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt("br_py2_exec400.txt")
 trialmtx = data[44:,1:]
+wavelengths = data[0, 1:]
 #for i in range(trialmtx.shape[0]):
 #    trialmtx[i,:]-=trialmtx[95,:]
 
 parameters = [0, -100., 100., 1., 10.]
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx.T,5, parameters) 
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx,wavelengths, 5, 0, parameters) 
 #%%
 #plt.figure(figsize=(13,7))
 #plt.subplot(1, 2, 1)
@@ -65,8 +66,8 @@ plt.subplot(1, 2, 2)
 plt.title("Plot $W_{rec}$")
 for i in range(len(Chi.T)):
     plt.plot(W_rec.T[i], label=i)
-   # plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
-plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
+    plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
+#plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
 plt.legend()
 plt.grid()
 #plt.xlim(400,100)
@@ -102,23 +103,23 @@ plt.show()
 #for j in [44,120,160,179]:
 #    plt.plot(trialmtx[j,:]/np.sum(trialmtx[j,:])*60)
 #%%
-plt.figure(figsize=(10,4))
-for i in [0,1,2,3,4]:
-   
-    plt.plot(H_rec[i], label=i)
-    #plt.xticks(np.arange(len(data[0,1:]), step=20),labels=np.round(data[0,1::20]))
-plt.title("$\chi$,analysis from 250 fs")
+#plt.figure(figsize=(10,4))
+#for i in [0,1,2,3,4]:
+#   
+#    plt.plot(H_rec[i], label=i)
+#    #plt.xticks(np.arange(len(data[0,1:]), step=20),labels=np.round(data[0,1::20]))
+#plt.title("$\chi$,analysis from 250 fs")
+##plt.legend()
+##plt.xlim(400,80) #flip the data
+#plt.xlabel("$\lambda$/nm")
+#plt.ylabel("value of the column vector")
+#plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
 #plt.legend()
-#plt.xlim(400,80) #flip the data
-plt.xlabel("$\lambda$/nm")
-plt.ylabel("value of the column vector")
-plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
-plt.legend()
-plt.grid()
-#plt.xlim(400,100)
-plt.xlabel("t/ps")
-
-plt.show()
+#plt.grid()
+##plt.xlim(400,100)
+#plt.xlabel("t/ps")
+#
+#plt.show()
 #%%
 
 #%%

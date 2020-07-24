@@ -57,13 +57,14 @@ def find_Aopt(A, Uit, M, params):
     dim =  int(np.sqrt(A_opt_flattered.shape[0]))
     return A_opt_flattered.reshape(dim,dim)
 
-def pcca_Umodified(Uit, lambdas, pi="uniform"):
+def pcca_Umodified(Uit, lambdas, dens=1):
     """pcca+ with the modified dominant left sing vectors"""
     m = np.shape(Uit)[0]
-    if pi=="uniform":
+    if dens==1:
         pi = np.ones(m)*1/float(m)
     else:
         pi = pi_pcca(lambdas)
+    #print("dasist pi", pi )
     Uit = cmdtools.analysis.pcca.gramschmidt(Uit, pi)
     optim = cmdtools.analysis.optimization.Optimizer()
     A = optim.solve(Uit, pi)
@@ -72,11 +73,11 @@ def pcca_Umodified(Uit, lambdas, pi="uniform"):
    
  
 
-def nmf(M, r = 3, params = [1,1,1,1,1]):
+def nmf(M, lambdas, r = 3, dens=1, params = [1,1,1,1,1]):
     """Method of NMF withouth separability assumption. Use notation of 
     paper   ADD DOI WHEN IS PUBLISHED"""
     _, _, Uit = make_Uit(M, int(r))
-    chi, Uitgm, A = pcca_Umodified(Uit)
+    chi, Uitgm, A = pcca_Umodified(Uit, lambdas, dens)
     A_optimized = find_Aopt(A, Uitgm, M, params)
     H_r = np.dot(Uitgm, A_optimized).T
     H_r_mt = np.dot(Uitgm[:-1,:], A_optimized)
