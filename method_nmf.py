@@ -74,8 +74,10 @@ def pcca_Umodified(Uit, lambdas, dens=1):
  
 
 def nmf(M, lambdas, r = 3, dens=1, params = [1,1,1,1,1]):
-    """Method of NMF withouth separability assumption. Use notation of 
-    paper   ADD DOI WHEN IS PUBLISHED"""
+    """Method of NMF withouth separability assumption. Use notation&method 
+    described in 'Analyzing Raman Spectral Data without Separability
+    Assumption', Konstantin Fackeldey, Jonas Röhm, Amir Niknejad, 
+    Surahit Chewle, Marcus Weber, 2020"""
     _, _, Uit = make_Uit(M, int(r))
     chi, Uitgm, A = pcca_Umodified(Uit, lambdas, dens)
     A_optimized = find_Aopt(A, Uitgm, M, params)
