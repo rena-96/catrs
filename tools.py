@@ -67,8 +67,11 @@ def weight_spectrum(M, lambdas):
     """Repeat same column multiple times so that is has the same weight"""
     dens = pi_pcca(lambdas)
     dens = np.around(dens/np.amin(dens))
-    weighted_M = np.zeros(M.shape[0], int(np.sum(dens)))
+    weighted_M = np.zeros((M.shape[0], int(np.sum(dens))))
+    count = 0  
     for i in range(len(dens)):
-        
-    return(np.int16(dens))
-b = [10,8,6,5,4,3,2,1.5,1]
+        copies = dens[i]
+        for j in range(int(copies)):
+            weighted_M[:, int(count+j)] = M[:,i]
+        count+=copies
+    return(weighted_M)
