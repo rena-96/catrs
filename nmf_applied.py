@@ -19,7 +19,7 @@ wavelengths = data[0, 1:]
 
 parameters = [0, -100., 100., 1., 10.]
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx,wavelengths, 5, 0, parameters) 
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx,wavelengths, 4, 0, parameters) 
 #%%
 #plt.figure(figsize=(13,7))
 #plt.subplot(1, 2, 1)
@@ -82,7 +82,7 @@ for i in range(len(Chi.T)):
     
     plt.subplot(num)
     plt.plot(Chi.T[i], label=i)
-    plt.xticks(np.arange(len(data[0,44:]), step=30),labels=np.round(data[0,44::30]))
+    plt.xticks(np.arange(len(data[0,1:]), step=30),labels=np.round(data[0,1::30]))
     plt.grid()
     plt.legend()
     plt.title("$\chi$_%d"%i)
@@ -92,17 +92,6 @@ for i in range(len(Chi.T)):
     num+=1
 plt.show()
     #%%
-#plt.plot(trialmtx[179,:]/np.sum(trialmtx[179,:])*60)
-#plt.plot(Chi.T[3,:]-0.5)
-#plt.xlim(400,80)
-##%%
-#plt.plot(trialmtx[118,:]/np.sum(trialmtx[118,:])*60)
-#plt.plot(Chi.T[0,:]-0.3)
-#plt.xlim(400,80)
-#%%
-#for j in [44,120,160,179]:
-#    plt.plot(trialmtx[j,:]/np.sum(trialmtx[j,:])*60)
-#%%
 #plt.figure(figsize=(10,4))
 #for i in [0,1,2,3,4]:
 #   
@@ -121,10 +110,11 @@ plt.show()
 #
 #plt.show()
 #%%
-
+for i in range(len(Chi.T)):
+    plt.plot(W_rec.T[i])
 #%%
-#from scipy.optimize import curve_fit
+from scipy.optimize import curve_fit
 #plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")
 
-#fit = curve_fit(lambda t,a,b: a+b*np.exp(t),  np.arange(141),  data[40:,0])
+fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[:,2],  data[44:,0])
 

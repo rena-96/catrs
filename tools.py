@@ -62,3 +62,13 @@ def pi_pcca(lambdas):
     for i in range(1, len(pi)-1):
         pi[i] = (diff[i-1]+diff[i])/(2*min_lambda)
     return pi/np.sum(pi)
+#%%
+def weight_spectrum(M, lambdas):
+    """Repeat same column multiple times so that is has the same weight"""
+    dens = pi_pcca(lambdas)
+    dens = np.around(dens/np.amin(dens))
+    weighted_M = np.zeros(M.shape[0], int(np.sum(dens)))
+    for i in range(len(dens)):
+        
+    return(np.int16(dens))
+b = [10,8,6,5,4,3,2,1.5,1]
