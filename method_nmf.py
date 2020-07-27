@@ -8,25 +8,31 @@ Created on Thu Jun 18 10:22:07 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy.linalg import svd, pinv
+from scipy.linalg import svd, diagsvd,pinv
 from scipy.optimize import fmin
 import cmdtools
 from tools import pi_pcca
 
 
 
-def make_Uit(M, r):
+def make_Uit(M, r, weight):
     '''Obtain the matrix denoted as U italics with the leading 
     r-1 vectors and the constant vector e=[1,1,...1] as first column.
     Input: 
         M=arr, matrix with the spectrum
         r=int, number of species
+        weight= kwarg, if False take the left singular values, if True 
+        weightes them with the singular values
     Output:
         s= ordered singular values
         U= left singular vectors
         Uit= constant vec + r-1 dominant left singular vectors '''
     U, s, _ = svd(M.T)
-    Uit = np.vstack((np.ones(np.shape(U)[0]), U[:, :(r-1)].T))
+    if weight==False:
+        Uit = np.vstack((np.ones(np.shape(U)[0]), U[:, :(r-1)].T))
+    else:
+        Utilde = (U[:,:r]).dot(diagsvd(s[:r],r, M.T.shape[0]))
+        Uit = np.vstack((np.ones(np.shape(U)[0]), Utilde[:, :(r-1)].T))
     return(s, U, Uit.T)
     
 def PSI_2(A, Uit, M, params):
@@ -73,12 +79,12 @@ def pcca_Umodified(Uit, lambdas, dens=1):
    
  
 
-def nmf(M, lambdas, r = 3, dens=1, params = [1,1,1,1,1]):
+def nmf(M, lambdas, r = 3, dens=1, params = [1,1,1,1,1], weight=False):
     """Method of NMF withouth separability assumption. Use notation&method 
     described in 'Analyzing Raman Spectral Data without Separability
     Assumption', Konstantin Fackeldey, Jonas Röhm, Amir Niknejad, 
     Surahit Chewle, Marcus Weber, 2020"""
-    _, _, Uit = make_Uit(M, int(r))
+    _, _, Uit = make_Uit(M, int(r), weight)
     chi, Uitgm, A = pcca_Umodified(Uit, lambdas, dens)
     A_optimized = find_Aopt(A, Uitgm, M, params)
     H_r = np.dot(Uitgm, A_optimized).T

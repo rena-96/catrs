@@ -19,7 +19,7 @@ wavelengths = data[0, 1:]
 
 parameters = [0, -100., 100., 1., 10.]
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx,wavelengths, 4, 0, parameters) 
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx,wavelengths, 4, 0, parameters, weight=True) 
 #%%
 #plt.figure(figsize=(13,7))
 #plt.subplot(1, 2, 1)
@@ -116,5 +116,5 @@ for i in range(len(Chi.T)):
 from scipy.optimize import curve_fit
 #plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")
 
-fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[:,2],  data[44:,0])
+fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[50:,2],  data[94:,0])
 
