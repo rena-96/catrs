@@ -14,12 +14,15 @@ from tools import norm_rows
 data = np.loadtxt("br_py2_exec400.txt")
 trialmtx = data[44:,1:]
 wavelengths = data[0, 1:]
+times = data[44:, 0]
 #for i in range(trialmtx.shape[0]):
 #    trialmtx[i,:]-=trialmtx[95,:]
 
 parameters = [0, -100., 100., 1., 10.]
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx,wavelengths, 4, 0, parameters, weight=True) 
+#M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx,wavelengths, 4, 0, parameters, weight=True) 
+
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(trialmtx.T,times, 4, 0, parameters, weight=False) 
 #%%
 #plt.figure(figsize=(13,7))
 #plt.subplot(1, 2, 1)
@@ -82,11 +85,11 @@ for i in range(len(Chi.T)):
     
     plt.subplot(num)
     plt.plot(Chi.T[i], label=i)
-    plt.xticks(np.arange(len(data[0,1:]), step=30),labels=np.round(data[0,1::30]))
+  #  plt.xticks(np.arange(len(data[0,1:]), step=30),labels=np.round(data[0,1::30]))
     plt.grid()
     plt.legend()
     plt.title("$\chi$_%d"%i)
-    plt.xlim(400,80) #flip the data
+#    plt.xlim(400,80) #flip the data
     plt.xlabel("$\lambda$/nm")
     plt.ylabel("value of the column vector")
     num+=1
