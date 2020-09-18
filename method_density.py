@@ -94,4 +94,4 @@ Pc = np.linalg.pinv(Chi).dot(count_tm.dot(Chi))
 diff_lambda = abs(data[0,1:-1]-data[0,2:])
 plt.plot(np.arange(len(diff_lambda)),diff_lambda, "-o")
 #%%
-t_o = voronoi.VoronoiTrajectory(np.reshape(red_mtx[:,3], (139,1)), 1, centers=np.array([[1,2,3]]).T)
+t_o = voronoi.VoronoiTrajectory(np.reshape(red_mtx[:,3], (139,1)), 1).propagator
