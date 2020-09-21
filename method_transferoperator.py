@@ -103,4 +103,5 @@ plt.imshow(trafo_pa, cmap="inferno_r",aspect = "auto")
 plt.colorbar()
 plt.show()
 #%%
-a = cmdtools.analysis.pcca.scipyschur(trafo_pa, 3)
+a = cmdtools.analysis.pcca.scipyschur(trafo_pa,5)
+plt.imshow(a, aspect="auto")
