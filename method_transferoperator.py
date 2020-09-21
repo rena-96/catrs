@@ -14,7 +14,6 @@ import cmdtools
 from tools import norm_rows, avg_spectrum
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
-from cmdtools import p
 import cmdtools.estimation.picking_algorithm as picking_algorithm
 #%%
 
@@ -103,5 +102,8 @@ plt.imshow(trafo_pa, cmap="inferno_r",aspect = "auto")
 plt.colorbar()
 plt.show()
 #%%
-a = cmdtools.analysis.pcca.scipyschur(trafo_pa,5)
+a = cmdtools.analysis.pcca.scipyschur(trafo_pa,4)
 plt.imshow(a, aspect="auto")
+#%%
+P_c = pinv(a).dot(trafo_pa.dot(a))
+plt.imshow(P_c)
