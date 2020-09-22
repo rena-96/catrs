@@ -32,29 +32,17 @@ def three_states_system(M):
                 M_copy[i , j] = 3.
     return(M_copy)
     
-    return(ind_matrix)
-#def sum_trafo(M, centers):
-#    sum_to = np.zeros()
-#    for i in range(M.shape[1]):
-        
-def countmatrix(M, avg=1, tau=1):
-    M = norm_rows(M, avg)
-    tau = int(tau)
-    count = M[:-tau,:].T.dot(M[tau:,:])
-    return norm_rows(count)
-#
-#a = np.random.rand(4,4) - np.random.rand(4,4)
-#count_a = countmatrix(a)
+
 #%%
-#trialmtx = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
+#spectrum = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')[1:,1:]
 data = np.loadtxt("br_py2_exec400.txt")
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
-trialmtx = data[40:,1:]
-red_mtx = three_states_system(0.15*trialmtx[:,:])
-#trialmtxpos = trialmtx-np.amin(trialmtx)
+spectrum = data[40:,1:]
+red_mtx = three_states_system(0.15*spectrum[:,:])
+#spectrumpos = spectrum-np.amin(spectrum)
 plt.figure(figsize=(12,4))
 plt.subplot(1, 2, 1)
-plt.imshow(trialmtx[:,:], cmap='inferno', aspect='auto')
+plt.imshow(spectrum[:,:], cmap='inferno', aspect='auto')
 plt.colorbar()
 plt.title("spectrum")
 plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
@@ -88,9 +76,11 @@ plt.show()
 ##lt.imshow(temp, cmap="gray",aspect = "auto")
     
 
-transferop = voronoi.VoronoiTrajectory(trialmtx, trialmtx.shape[1], centers=trialmtx[::10,:]).propagator()   
+transferop = voronoi.VoronoiTrajectory(spectrum, spectrum.shape[1], centers=spectrum[::10,:]).propagator()   
 #%%
-ew, ev = np.linalg.eig(transferop)
+ew, ev = np.linalg.eig(trafo_pa)
+ew = np.sort(ew)
+plt.plot(ew, "-o")
 #%%
 plt.figure(figsize=(12,4))
 plt.subplot(1, 2, 1)
@@ -102,8 +92,9 @@ plt.imshow(trafo_pa, cmap="inferno_r",aspect = "auto")
 plt.colorbar()
 plt.show()
 #%%
-a = cmdtools.analysis.pcca.scipyschur(trafo_pa,4)
+a = cmdtools.analysis.pcca.scipyschur(trafo_pa,6)
 plt.imshow(a, aspect="auto")
 #%%
 P_c = pinv(a).dot(trafo_pa.dot(a))
+print(np.sum(P_c, axis=1))
 plt.imshow(P_c)
