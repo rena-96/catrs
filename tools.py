@@ -10,7 +10,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import svd, pinv
 from scipy.optimize import fmin
-import cmdtools
+from sklearn.neighbors import NearestNeighbors
+from sklearn.cluster import KMeans
+from cmdtools import utils
 #%%
 def avg_spectrum(M, avg):
     check_divisibility =  M.shape[1]%avg
@@ -75,3 +77,30 @@ def weight_spectrum(M, lambdas):
             weighted_M[:, int(count+j)] = M[:,i]
         count+=copies
     return(weighted_M)
+def weight_time(dt_array):
+    time_intervals = np.log(abs(dt_array[:-1]-dt_array[1:]))
+    step_first = 1-time_intervals[0]
+    return(time_intervals+step_first)
+    
+
+def voronoi_propagator(X, centers, nstates, dt):
+    P = np.zeros((nstates, nstates))
+    if centers == "kmeans":
+        k = KMeans(n_clusters=nstates).fit(X)
+        inds = k.labels_
+   # centers = k.cluster_centers_
+    else:
+        
+        inds =  (NearestNeighbors()
+            .fit(centers).kneighbors(X, 1, False)
+            .reshape(-1))
+    if len(dt)==1:
+        for i in range(len(inds)-dt):
+            P[inds[i], inds[i+dt]] += 1
+    else:
+        for i in range(len(inds)-1):
+            time_weight = weight_time(dt)
+            P[inds[i], inds[i+1]] += 1*time_weight[i]
+        
+    return utils.rowstochastic(P)
+
