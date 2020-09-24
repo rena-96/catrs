@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.linalg import svd, pinv
 import cmdtools
 #from tools import norm_rows, avg_spectrum
+from tools import voronoi_propagator
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
@@ -20,18 +21,19 @@ data = np.loadtxt("br_py2_exec400.txt")
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 spectrum = data[40:, 1:]
 #%%
-picked_ind = np.sort(picking_algorithm(spectrum, 30)[1])
+picked_ind = np.sort(picking_algorithm(spectrum, 29)[1])
 center_type = ["kmeans", spectrum[picked_ind,:], spectrum[::5,:]]
 list_Koopman_gen = []
 for types in center_type:
-    K = voronoi.VoronoiTrajectory(spectrum, 30, centers=types).propagator() 
+    #K = voronoi.VoronoiTrajectory(spectrum, 30, centers=types).propagator() 
+    K = voronoi_propagator(spectrum,types,29,dt=[1])
     list_Koopman_gen.append(K-np.eye(K.shape[0]))
 list_ew = []
 for i in range(3):
     list_ew.append(np.sort(np.linalg.eigvals(list_Koopman_gen[i])))
 list_Chi = []
 for c in range(3):
-    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman_gen[c],4))
+    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman_gen[c],5))
     #%%
 for j in range(3):
     plt.imshow(list_Koopman_gen[j])
@@ -55,6 +57,7 @@ plt.colorbar()
 plt.title("Kmeans")
 plt.xticks(np.arange(len(data[0,1:]), step=60),labels=np.round(data[0,1::60]))
 plt.yticks(np.arange(len(data[40:,0]), step=20),labels=np.round(data[40::20,0],2))
+#for  -
 plt.subplot(1, 3, 2)
 plt.imshow(spectrum, cmap="inferno",aspect = "auto")
 plt.colorbar()

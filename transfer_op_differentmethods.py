@@ -84,7 +84,7 @@ plt.xticks(np.arange(len(data[0,1:]), step=60),labels=np.round(data[0,1::60]))
 plt.yticks(np.arange(len(data[40:,0]), step=20),labels=np.round(data[40::20,0],2))
 for j in np.arange(spectrum.shape[0], step=10):
     print(j)
-    plt.axhline(y=j, color=color_list[np.argmax((list_Chi[2])[int(j/5),:])])
+    plt.axhline(y=j, color=color_list[np.argmax((list_Chi[2])[int(j/10),:])])
 plt.show()
 #%%
 eigenvalsK = np.log(np.real(np.linalg.eigvals(K_c)))

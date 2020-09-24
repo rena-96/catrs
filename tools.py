@@ -95,8 +95,8 @@ def voronoi_propagator(X, centers, nstates, dt):
             .fit(centers).kneighbors(X, 1, False)
             .reshape(-1))
     if len(dt)==1:
-        for i in range(len(inds)-dt):
-            P[inds[i], inds[i+dt]] += 1
+        for i in range(len(inds)-dt[0]):
+            P[inds[i], inds[i+dt[0]]] += 1
     else:
         for i in range(len(inds)-1):
             time_weight = weight_time(dt)
