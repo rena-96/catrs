@@ -37,7 +37,7 @@ for i in range(3):
     list_ew.append(np.sort(np.linalg.eigvals(list_Koopman[i])))
 list_Chi = []
 for c in range(3):
-    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman[c],6))
+    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman[c],4))
     #%%
 for j in range(3):
     plt.imshow(list_Koopman[j])
