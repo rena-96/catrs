@@ -47,7 +47,7 @@ for i in range(3):
     list_ew.append(np.sort(np.linalg.eigvals(list_Koopman[i])))
 list_Chi = []
 for c in range(3):
-    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman[c],5))
+    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman[c],6))
     #%%
 for j in range(3):
     plt.imshow(list_Koopman[j])
@@ -63,7 +63,7 @@ for i in range(3):
     print(np.sum(K_c[i], axis =1))
 #plt.imshow(K_c)
     #%%
-color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold"]
+color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold", "darkorchid", "seashell"]
 plt.figure(figsize=(18,6))
 plt.subplot(1, 3, 1)
 plt.imshow(spectrum, cmap='inferno', aspect='auto')

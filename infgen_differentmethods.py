@@ -77,4 +77,4 @@ for j in np.arange(spectrum.shape[0], step=5):
 plt.show()
 #%%
 eigenvals = np.linalg.eigvals(Q_c)
-print(np.sort(1/eigenvals))
+print(-np.real(np.sort(1/eigenvals)))
