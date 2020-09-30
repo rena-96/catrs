@@ -28,7 +28,8 @@ center_type = ["kmeans", spectrum[picked_ind,:], (spectrum[::7,:])[:-1]]
 list_Koopman = []
 for types in center_type:
    # K = voronoi.VoronoiTrajectory(spectrum, 29, centers=types).propagator() 
-    list_Koopman.append(voronoi_propagator(spectrum,types,20,dt=data[40:,0]))
+#    list_Koopman.append(voronoi_propagator(spectrum,types,20,dt=data[40:,0])- np.eye(20))
+   list_Koopman.append(voronoi_propagator(spectrum,types,20,dt=data[40:,0]))
     
     #%%
 list_ew = []
@@ -37,7 +38,7 @@ for i in range(3):
     list_ew.append(np.sort(np.linalg.eigvals(list_Koopman[i])))
 list_Chi = []
 for c in range(3):
-    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman[c],4))
+    list_Chi.append(cmdtools.analysis.pcca.pcca(list_Koopman[c],8))
     #%%
 for j in range(3):
     plt.imshow(list_Koopman[j])
@@ -53,7 +54,7 @@ for i in range(3):
     print(np.sum(K_c[i], axis =1))
 #plt.imshow(K_c)
     #%%
-color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold", "darkorchid", "seashell"]
+color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold", "darkorchid", "seashell", "lime"]
 plt.figure(figsize=(18,6))
 plt.subplot(1, 3, 1)
 plt.imshow(spectrum, cmap='inferno', aspect='auto')
@@ -80,5 +81,6 @@ for j in np.arange(spectrum.shape[0]-1, step=7):
     plt.axhline(y=j, color=color_list[np.argmax((list_Chi[2])[int(j/7),:])])
 plt.show()
 #%%
-eigenvalsK = np.log(np.real(np.linalg.eigvals(K_c)))
+#eigenvalsK = np.log(np.real(np.linalg.eigvals(K_c)))
+#eigenvalsK = np.linalg.eigvals(K_c)
 print(np.sort(1/eigenvalsK))

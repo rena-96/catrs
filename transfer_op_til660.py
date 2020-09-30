@@ -53,7 +53,7 @@ for i in range(3):
     print(np.sum(K_c[i], axis =1))
 #plt.imshow(K_c)
     #%%
-color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold", "darkorchid", "seashell"]
+color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold", "darkorchid", "seashell", "lime"]
 plt.figure(figsize=(18,6))
 plt.subplot(1, 3, 1)
 plt.imshow(spectrum, cmap='inferno', aspect='auto')
