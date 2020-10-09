@@ -12,7 +12,9 @@ from scipy.linalg import svd, pinv
 from scipy.optimize import fmin
 from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import KMeans
+import cmdtools
 from cmdtools import utils
+from cmdtools.estimation.picking_algorithm import picking_algorithm
 #%%
 def avg_spectrum(M, avg):
     check_divisibility =  M.shape[1]%avg
@@ -104,3 +106,14 @@ def voronoi_propagator(X, centers, nstates, dt):
         
     return utils.rowstochastic(P)
 
+def analyse_spectrum_picking_alg(spectrum, timesteps, no_centers):
+    picked_ind = np.sort(picking_algorithm(spectrum, int(no_centers))[1])
+    Koopman = voronoi_propagator(spectrum,spectrum[picked_ind, :], int(no_centers),dt = timesteps)
+    eigvals = np.sort(np.linalg.eigvals(Koopman))
+    plt.plot(eigvals, "-o")
+    plt.show()
+    n_c = input("How many dominants eigenvalues?")
+    Chi_ = cmdtools.analysis.pcca.pcca(Koopman,int(n_c))
+    K_c = pinv(Chi_).dot(Koopman.dot(Chi_))
+    return(K_c, Chi_, picked_ind)
+    
