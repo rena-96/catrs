@@ -22,3 +22,8 @@ report.xml
 #ignore spectral data
 br_py2_exec400.txt
 iso_br_al_cor_py2_400nm_ex_ir.txt
+#ignore big matrices
+matrix_1.dat
+matrix_2.dat
+matrix_3.dat
+
