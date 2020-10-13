@@ -60,7 +60,7 @@ plt.subplot(1, 2, 1)
 plt.title("Plot $\chi$")
 for i in range(len(Chi.T)):
     plt.plot(Chi.T[i], label=i)
-  #  plt.xticks(np.arange(len(data[0,1:]), step=25),labels=np.round(data[0,1::25],1))
+    plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
 plt.grid()
 plt.legend()
 #plt.xlim(400,100) #flip the data
@@ -117,8 +117,8 @@ plt.show()
 for i in range(len(Chi.T)):
     plt.plot(W_rec.T[i])
 #%%
-from scipy.optimize import curve_fit
-#plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")
-
-fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[50:,2],  data[94:,0])
+#from scipy.optimize import curve_fit
+##plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")
+#
+#fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[50:,2],  data[94:,0])
 
