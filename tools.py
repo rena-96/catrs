@@ -83,6 +83,9 @@ def weight_time(dt_array):
     time_intervals = np.log(abs(dt_array[:-1]-dt_array[1:]))
     step_first = 1-time_intervals[0]
     return(time_intervals+step_first)
+
+def stroboscopic_inds(x):
+    return(np.searchsorted(x, np.arange(np.max(x)+1),side="right")-1)
     
 
 def voronoi_propagator(X, centers, nstates, dt):
@@ -105,6 +108,32 @@ def voronoi_propagator(X, centers, nstates, dt):
             P[inds[i], inds[i+1]] += 1*time_weight[i]
         
     return utils.rowstochastic(P)
+def voronoi_koopman(X, centers,nstates, timeseries, dt):
+    
+    K = np.zeros((nstates, nstates))
+    if centers == "kmeans":
+        k = KMeans(n_clusters=nstates).fit(X)
+        inds = k.labels_
+   # centers = k.cluster_centers_
+    else:
+        
+        inds =  (NearestNeighbors()
+            .fit(centers).kneighbors(X, 1, False)
+            .reshape(-1))
+    select_inds = stroboscopic_inds(timeseries) #tau=1
+    print(len(select_inds), len(inds))
+    inds = inds[select_inds]
+    for i in range(0,len(inds), dt):
+            K[inds[i], inds[i]] += 1
+    return utils.rowstochastic(K)
+    
+    
+    
+    
+        
+    
+    
+    
 
 def analyse_spectrum_picking_alg(spectrum, timesteps, no_centers):
     picked_ind = np.sort(picking_algorithm(spectrum, int(no_centers))[1])
@@ -116,4 +145,4 @@ def analyse_spectrum_picking_alg(spectrum, timesteps, no_centers):
     Chi_ = cmdtools.analysis.pcca.pcca(Koopman,int(n_c))
     K_c = pinv(Chi_).dot(Koopman.dot(Chi_))
     return(K_c, Chi_, picked_ind)
-    
+

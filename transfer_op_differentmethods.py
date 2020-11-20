@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.linalg import svd, pinv
 from sklearn.cluster import KMeans
 import cmdtools
-from tools import voronoi_propagator
+from tools import voronoi_koopman
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
@@ -38,7 +38,7 @@ center_type = ["kmeans", spectrum[picked_ind,:], (spectrum[::9,:])[:-1]]
 list_Koopman = []
 for types in center_type:
    # K = voronoi.VoronoiTrajectory(spectrum, 29, centers=types).propagator() 
-    K = voronoi_propagator(spectrum,types,15,dt=data[1:,0])
+    K = voronoi_koopman(spectrum,types,15,timeseries=data[42:,0],dt=1)
     list_Koopman.append(K)
     #%%
 list_ew = []
