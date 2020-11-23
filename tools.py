@@ -31,16 +31,6 @@ def norm_rows(M, avg=1):
     M = avg_spectrum(M,avg)
     return M/np.sum(M, axis =0)
 
-#def norm_vis(M, lambdas):
-#    max_lambda = np.amax(lambdas[:-1]-lambdas[1:])
-#    count = 0
-#    while count < len(lambdas):
-#        diff = 0
-#    for i in range(last):
-#        while abs(diff- max_lambda) > 0.3:
-#            
-#        
-#    return new_M
 
 def norm_IR( lambdas):
     new_M = []
@@ -109,22 +99,38 @@ def voronoi_propagator(X, centers, nstates, dt):
         
     return utils.rowstochastic(P)
 def voronoi_koopman(X, centers,nstates, timeseries, dt):
-    
+    strobox = stroboscopic_inds(timeseries)
+    X_new = X[strobox,:]
     K = np.zeros((nstates, nstates))
     if centers == "kmeans":
-        k = KMeans(n_clusters=nstates).fit(X)
+        k = KMeans(n_clusters=nstates).fit(X_new)
         inds = k.labels_
    # centers = k.cluster_centers_
     else:
         
         inds =  (NearestNeighbors()
-            .fit(centers).kneighbors(X, 1, False)
+            .fit(centers).kneighbors(X_new, 1, False)
             .reshape(-1))
     select_inds = stroboscopic_inds(timeseries) #tau=1
-    print(len(select_inds), len(inds))
-    inds = inds[select_inds]
-    for i in range(0,len(inds), dt):
-            K[inds[i], inds[i]] += 1
+   
+    for i in range(0,len(inds)-1, dt):
+            K[inds[i], inds[i+1]] += 1
+    print(K)
+    return utils.rowstochastic(K)
+
+def voronoi_koopman_picking(X, nstates, timeseries, dt):
+    strobox = stroboscopic_inds(timeseries)
+    X_new = X[strobox,:]
+    K = np.zeros((nstates, nstates))
+    centers = X_new[np.sort(picking_algorithm(X_new,20)[1]),:]
+    inds =  (NearestNeighbors()
+            .fit(centers).kneighbors(X_new, 1, False)
+            .reshape(-1))
+    #tau=1
+   
+    for i in range(0,len(inds)-1, int(dt)):
+            K[inds[i], inds[i+1]] += 1
+    #print(K)
     return utils.rowstochastic(K)
     
     

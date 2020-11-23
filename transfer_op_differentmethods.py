@@ -19,7 +19,7 @@ from cmdtools.estimation.picking_algorithm import picking_algorithm
 
 data = np.loadtxt("br_py2_exec400.txt")
 #data = np.loadtxt('iso_br_al_cor_py2_420nm_ex_ir.txt')
-spectrum = data[42:, 1:]
+spectrum = data[43:, 1:]
 #%%
 #def by_kmeans(X, n):
 #    k = KMeans(n_clusters=n).fit(X) 
@@ -32,13 +32,14 @@ spectrum = data[42:, 1:]
 #    return(kcenters)
 #kmeans_ind = by_kmeans(spectrum, 6)
 #%%
-picked_ind = np.sort(picking_algorithm(spectrum, 15)[1])
-center_type = ["kmeans", spectrum[picked_ind,:], (spectrum[::9,:])[:-1]]
+picked_ind = np.sort(picking_algorithm(spectrum,20)[1])
+center_type = ["kmeans", spectrum[picked_ind,:]]# (spectrum[::9,:])[:-1]]
 #%%
 list_Koopman = []
 for types in center_type:
    # K = voronoi.VoronoiTrajectory(spectrum, 29, centers=types).propagator() 
-    K = voronoi_koopman(spectrum,types,15,timeseries=data[42:,0],dt=1)
+    
+    K = voronoi_koopman(spectrum,types,20,timeseries=data[43:,0],dt=1)
     list_Koopman.append(K)
     #%%
 list_ew = []
