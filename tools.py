@@ -122,7 +122,8 @@ def voronoi_koopman_picking(X, nstates, timeseries, dt):
     strobox = stroboscopic_inds(timeseries)
     X_new = X[strobox,:]
     K = np.zeros((nstates, nstates))
-    centers = X_new[np.sort(picking_algorithm(X_new,20)[1]),:]
+    picked_inds = np.sort(picking_algorithm(X_new,nstates)[1])
+    centers = X_new[picked_inds,:]
     inds =  (NearestNeighbors()
             .fit(centers).kneighbors(X_new, 1, False)
             .reshape(-1))
@@ -131,7 +132,7 @@ def voronoi_koopman_picking(X, nstates, timeseries, dt):
     for i in range(0,len(inds)-1, int(dt)):
             K[inds[i], inds[i+1]] += 1
     #print(K)
-    return utils.rowstochastic(K)
+    return utils.rowstochastic(K), X_new,picked_inds
     
     
     
