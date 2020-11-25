@@ -135,6 +135,20 @@ def voronoi_koopman_picking(X, nstates, timeseries, dt):
     return utils.rowstochastic(K), X_new,picked_inds
     
     
+def plot_spectrum_strx(X, ls,ts, strobox=True):
+    """X: spectrum, ls=wavelengths,ts=time"""
+    if strobox==True:
+        strobox = stroboscopic_inds(timeseries)
+        X_new = X[strobox,:]
+    if strobox==False:
+        
+        plt.figure(figsize=(7,6))
+        plt.imshow(X, cmap="inferno",aspect = "auto")
+        plt.colorbar()
+        plt.title("Picking algorithm")
+        plt.xticks(np.arange(len(ls), step=60),labels=np.round(ls[1::60]))
+        #start with zero but remember to take it off from the lambdas in the data
+        plt.yticks(np.arange(len(ts), step=20),labels=np.round(ts[::20],2))
     
     
         

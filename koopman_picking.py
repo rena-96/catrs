@@ -22,7 +22,7 @@ data = np.loadtxt("br_py2_exec400.txt")
 spectrum = data[43:, 1:]
 
 #%%
-K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum,20,timeseries=data[43:,0],dt=1)
+K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum,50,timeseries=data[43:,0],dt=1)
 
     #%%
 eig_k = np.sort(np.linalg.eigvals(K))
