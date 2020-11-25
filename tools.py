@@ -75,8 +75,8 @@ def weight_time(dt_array):
     return(time_intervals+step_first)
 
 def stroboscopic_inds(x):
-    return(np.searchsorted(x, np.arange(np.max(x)+1),side="right")-1)
-    
+    # return(np.searchsorted(x, np.arange(np.max(x)+1),side="right")-1)
+    return(np.searchsorted(x, np.arange(np.max(x)+1),side="right")-1)    
 
 def voronoi_propagator(X, centers, nstates, dt):
     P = np.zeros((nstates, nstates))
@@ -138,18 +138,33 @@ def voronoi_koopman_picking(X, nstates, timeseries, dt):
 def plot_spectrum_strx(X, ls,ts, strobox=True):
     """X: spectrum, ls=wavelengths,ts=time"""
     if strobox==True:
-        strobox = stroboscopic_inds(timeseries)
-        X_new = X[strobox,:]
-    if strobox==False:
+        strobox = stroboscopic_inds(ts)
         
+        X_new = X[strobox,:]
+        ts_new = ts[strobox]
+        step_ = int(len(ts_new)/10)
+        plt.figure(figsize=(7,6))
+        plt.imshow(X_new, cmap="inferno",aspect = "auto")
+        plt.colorbar()
+        plt.title("PCCA+, RBF=Voronoi + picking alg centers, with 1ps step")
+        plt.xticks(np.arange(len(ls), step=60),labels=np.round(ls[1::60]))
+        #start with zero but remember to take it off from the lambdas in the data
+        plt.yticks(np.arange(len(ts_new), step=step_),labels=np.round(ts_new[::step_],2))
+        
+    
+    
+        
+    elif strobox==False:
+        step_ = int(len(ts)/10)
         plt.figure(figsize=(7,6))
         plt.imshow(X, cmap="inferno",aspect = "auto")
         plt.colorbar()
-        plt.title("Picking algorithm")
+        plt.title("PCCA+, RBF=Voronoi + picking alg centers")
         plt.xticks(np.arange(len(ls), step=60),labels=np.round(ls[1::60]))
         #start with zero but remember to take it off from the lambdas in the data
-        plt.yticks(np.arange(len(ts), step=20),labels=np.round(ts[::20],2))
-    
+        plt.yticks(np.arange(len(ts), step=step_),labels=np.round(ts[::step_],2))
+        
+   # plt.show()
     
         
     

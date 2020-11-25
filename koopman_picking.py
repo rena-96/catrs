@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 from scipy.linalg import svd, pinv
 from sklearn.cluster import KMeans
 import cmdtools
-from tools import voronoi_koopman_picking
+from tools import voronoi_koopman_picking, plot_spectrum_strx, stroboscopic_inds
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
@@ -22,7 +22,7 @@ data = np.loadtxt("br_py2_exec400.txt")
 spectrum = data[43:, 1:]
 
 #%%
-K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum,50,timeseries=data[43:,0],dt=1)
+K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum,30,timeseries=data[43:,0],dt=1)
 
     #%%
 eig_k = np.sort(np.linalg.eigvals(K))
@@ -48,10 +48,15 @@ plt.imshow(spectrum_new, cmap="inferno",aspect = "auto")
 plt.colorbar()
 plt.title("Picking algorithm")
 plt.xticks(np.arange(len(data[0,1:]), step=60),labels=np.round(data[0,1::60]))
-plt.yticks(np.arange(len(data[43:,0]), step=20),labels=np.round(data[42::20,0],2))
+plt.yticks(np.arange(len(data[42:,0]), step=20),labels=np.round(data[42::20,0],2))
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 plt.show()
 # #%%
 # eigenvalsK = np.log(np.real(np.linalg.eigvals(K_c)))
 # print(np.sort(1/eigenvalsK))
+#%%
+plot_spectrum_strx(spectrum,data[0,1:], data[43:,0])
+for i in range(len(picked_inds)):
+    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+plt.show()
