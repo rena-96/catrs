@@ -76,7 +76,7 @@ def weight_time(dt_array):
 
 def stroboscopic_inds(x):
     # return(np.searchsorted(x, np.arange(np.max(x)+1),side="right")-1)
-    return(np.searchsorted(x, np.arange(np.max(x)+1),side="right")-1)    
+    return(np.searchsorted(x, np.arange(np.max(x)),side="right"))    
 
 def voronoi_propagator(X, centers, nstates, dt):
     P = np.zeros((nstates, nstates))
@@ -128,7 +128,7 @@ def voronoi_koopman_picking(X, nstates, timeseries, dt):
             .fit(centers).kneighbors(X_new, 1, False)
             .reshape(-1))
     #tau=1
-   
+    # print(inds, "inds of K")
     for i in range(0,len(inds)-1, int(dt)):
             K[inds[i], inds[i+1]] += 1
     #print(K)
@@ -144,7 +144,7 @@ def plot_spectrum_strx(X, ls,ts, strobox=True):
         ts_new = ts[strobox]
         step_ = int(len(ts_new)/10)
         plt.figure(figsize=(7,6))
-        plt.imshow(X_new, cmap="inferno",aspect = "auto")
+        plt.imshow(X_new, cmap="coolwarm",aspect = "auto", alpha=0.8)
         plt.colorbar()
         plt.title("PCCA+, RBF=Voronoi + picking alg centers, with 1ps step")
         plt.xticks(np.arange(len(ls), step=60),labels=np.round(ls[1::60]))

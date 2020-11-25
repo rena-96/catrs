@@ -15,6 +15,8 @@ from tools import voronoi_koopman_picking, plot_spectrum_strx, stroboscopic_inds
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
+from cmdtools.estimation.newton_generator import Newton_N
+from sklearn.neighbors import NearestNeighbors
 #%%
 
 data = np.loadtxt("br_py2_exec400.txt")
@@ -22,12 +24,14 @@ data = np.loadtxt("br_py2_exec400.txt")
 spectrum = data[43:, 1:]
 
 #%%
-K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum,30,timeseries=data[43:,0],dt=1)
+K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum,17,timeseries=data[43:,0],dt=1)
 
     #%%
 eig_k = np.sort(np.linalg.eigvals(K))
+eigvec_k = np.linalg.eig(K)[1]
 print(eig_k)
-chi_k = cmdtools.analysis.pcca.pcca(K,4)
+#%%
+chi_k = cmdtools.analysis.pcca.pcca(K,5)
 
 plt.imshow(K)
 plt.show()
@@ -41,22 +45,39 @@ K_c =  pinv(chi_k).dot(K.dot(chi_k))#/ (pinv(chi_k).dot(chi_k)))
 plt.imshow(K_c)
 plt.colorbar()
     #%%
-color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold"]
-plt.figure(figsize=(6,5))
-
-plt.imshow(spectrum_new, cmap="inferno",aspect = "auto")
-plt.colorbar()
-plt.title("Picking algorithm")
-plt.xticks(np.arange(len(data[0,1:]), step=60),labels=np.round(data[0,1::60]))
-plt.yticks(np.arange(len(data[42:,0]), step=20),labels=np.round(data[42::20,0],2))
-for i in range(len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
-plt.show()
-# #%%
-# eigenvalsK = np.log(np.real(np.linalg.eigvals(K_c)))
-# print(np.sort(1/eigenvalsK))
-#%%
+color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
 plot_spectrum_strx(spectrum,data[0,1:], data[43:,0])
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+plt.show()
+#%%
+ts = data[43:,0]
+#print(ts[stroboscopic_inds(ts)])
+#%%
+#infgen
+jumps = 4
+nstates = 17
+strobox = stroboscopic_inds(ts)
+spectrum_infgen = spectrum[strobox,:]
+K_tens = np.zeros((jumps,nstates, nstates))
+picked_inds = np.sort(picking_algorithm(spectrum_infgen,nstates)[1])
+centers = spectrum_infgen[picked_inds,:]
+inds =  (NearestNeighbors()
+         .fit(centers).kneighbors(spectrum_infgen, 1, False)
+         .reshape(-1))
+#tau=1
+# print(inds, "inds of K")
+for j in range(jumps):
+    
+    for i in range(0,len(inds)-j):
+       (K_tens[j])[inds[i], inds[i+j]] += 1
+    K_tens[j] = utils.rowstochastic(K_tens[j])
+#%%
+Infgen = Newton_N(K_tens, 1, 0)
+eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
+chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,5)
+color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
+plot_spectrum_strx(spectrum,data[0,1:], data[43:,0])
+for i in range(len(picked_inds)):
+    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
 plt.show()

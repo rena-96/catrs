@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 from method_nmf import nmf
 from tools import norm_rows
 #%%
-#data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
-data = np.loadtxt("matrix_2.dat").T
+data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
+# data = np.loadtxt("matrix_2.dat").T
 #%%
 spectrum = data[44:,1:]
 wavelengths = data[0, 1:]
