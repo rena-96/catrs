@@ -146,7 +146,9 @@ def plot_spectrum_strx(X, ls,ts, strobox=True):
         plt.figure(figsize=(7,6))
         plt.imshow(X_new, cmap="coolwarm",aspect = "auto", alpha=0.8)
         plt.colorbar()
-        plt.title("PCCA+, RBF=Voronoi + picking alg centers, with 1ps step")
+        plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
+        plt.xlabel("$\lambda$ [nm]")
+        plt.ylabel("delay time [ps]")
         plt.xticks(np.arange(len(ls), step=60),labels=np.round(ls[1::60]))
         #start with zero but remember to take it off from the lambdas in the data
         plt.yticks(np.arange(len(ts_new), step=step_),labels=np.round(ts_new[::step_],2))
