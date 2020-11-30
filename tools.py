@@ -120,6 +120,7 @@ def voronoi_koopman(X, centers,nstates, timeseries, dt):
 
 def voronoi_koopman_picking(X, nstates, timeseries, dt):
     strobox = stroboscopic_inds(timeseries)
+    print(strobox)
     X_new = X[strobox,:]
     K = np.zeros((nstates, nstates))
     picked_inds = np.sort(picking_algorithm(X_new,nstates)[1])

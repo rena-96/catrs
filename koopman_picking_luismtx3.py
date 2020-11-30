@@ -20,7 +20,7 @@ from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 #%%
 
-data_1 = np.loadtxt("matrix_1.dat")
+data_1 = np.loadtxt("matrix_3.dat")
 # data_2 = np.loadtxt("matrix_2.dat")
 # data_3 = np.loadtxt("matrix_3.dat")
 #data = np.loadtxt('iso_br_al_cor_py2_420nm_ex_ir.txt')
