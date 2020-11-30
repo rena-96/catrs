@@ -11,11 +11,11 @@ from method_nmf import nmf
 from tools import norm_rows
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
-data = np.loadtxt("matrix_2.dat").T
+data = np.loadtxt("matrix_3.dat").T
 #%%
-spectrum = data[44:,1:]
+spectrum = data[102:,1:]
 wavelengths = data[0, 1:]
-times = data[44:, 0]
+times = data[102:, 0]
 #for i in range(spectrum.shape[0]):
 #    spectrum[i,:]-=spectrum[95,:]
 
@@ -67,7 +67,7 @@ plt.legend()
 plt.xlabel("$\lambda$/nm")
 plt.ylabel("$\chi$[i]")
 plt.subplot(1, 2, 2)
-plt.title("Plot $W_{rec}$")
+plt.title("Plot $\mid W_{rec}\mid$")
 for i in range(len(Chi.T)):
     plt.plot(W_rec.T[i], label=i)
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
@@ -115,7 +115,7 @@ plt.show()
 #plt.show()
 #%%
 for i in range(len(Chi.T)):
-    plt.plot(W_rec.T[i])
+    plt.plot(abs(W_rec.T[i]))
 #%%
 #from scipy.optimize import curve_fit
 ##plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")

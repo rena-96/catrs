@@ -9,7 +9,7 @@ Created on Tue Sep 22 12:08:06 2020
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from scipy.linalg import svd, pinv
+from scipy.linalg import svd, pinv, logm
 from sklearn.cluster import KMeans
 import cmdtools
 from tools import voronoi_koopman_picking, plot_spectrum_strx, stroboscopic_inds
@@ -58,15 +58,16 @@ plt.show()
 
 #%%
 #infgen
-jumps = 4
-nstates = 17
+jumps = 10
+nstates = 20
 strobox = stroboscopic_inds(ts1)
 
 spectrum_infgen = (spectrum_1.T)[strobox,:]
 K_tens = np.zeros((jumps,nstates, nstates))
-picked_inds = np.sort(picking_algorithm(spectrum_infgen,nstates)[1])
+
+#picked_inds = np.sort(picking_algorithm(spectrum_infgen,nstates)[1])
 centers = spectrum_infgen[picked_inds,:]
-inds =  (NearestNeighbors()
+inds =  (NearestNeighbors(metric="mahalanobis")
           .fit(centers).kneighbors(spectrum_infgen, 1, False)
           .reshape(-1))
 #tau=1
@@ -77,12 +78,17 @@ for j in range(jumps):
         (K_tens[j])[inds[i], inds[i+j]] += 1
     K_tens[j] = utils.rowstochastic(K_tens[j])
 #%%
-Infgen = Newton_N(K_tens, 1, 0)
+Infgen = Newton_N(K_tens[:4], 1, 0)
 eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
 chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,2)
 color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
 plot_spectrum_strx(spectrum_1.T,data_1[1:,0], ts1)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
-plt.savefig("pcca_nt_br_al_corr_vis.pdf")
+# plt.savefig("pcca_nt_br_al_corr_vis.pdf")
 plt.show()
+
+#%%
+Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
+
+print(Infgen_c.diagonal(), logm(K_c).diagonal(), (K_c-np.ones(K_c.shape[0])).diagonal())
