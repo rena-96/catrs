@@ -14,8 +14,8 @@ from tools import norm_rows
 data = np.loadtxt("matrix_3.dat").T
 #%%
 spectrum = data[102:,1:]
-wavelengths = data[0, 1:]
-times = data[102:, 0]
+times = data[0, 102:]
+wavelength = data[1:, 0]
 #for i in range(spectrum.shape[0]):
 #    spectrum[i,:]-=spectrum[95,:]
 
@@ -23,7 +23,7 @@ parameters = [0, -100., 100., 1., 10.]
 
 #M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 4, 0, parameters, weight=True) 
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 2, 0, parameters, weight=False) 
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 3, 0, parameters, weight=False) 
 #%%
 #plt.figure(figsize=(13,7))
 #plt.subplot(1, 2, 1)
@@ -115,7 +115,7 @@ plt.show()
 #plt.show()
 #%%
 for i in range(len(Chi.T)):
-    plt.plot(abs(W_rec.T[i]))
+    plt.plot(abs(H_rec[i]))
 #%%
 #from scipy.optimize import curve_fit
 ##plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")

@@ -20,18 +20,39 @@ from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 #%%
 
-data_1 = np.loadtxt("matrix_3.dat")
+data_1 = np.loadtxt("matrix_2.dat")
 # data_2 = np.loadtxt("matrix_2.dat")
 # data_3 = np.loadtxt("matrix_3.dat")
 #data = np.loadtxt('iso_br_al_cor_py2_420nm_ex_ir.txt')
 #%%
-spectrum_1 = data_1[1:, 102:]
-ts1 = data_1[0,102:]
-aaa = stroboscopic_inds(ts1)
+spectrum_1 = data_1[1:, 50:]
+ts1 = data_1[0,50:]
+aaa = stroboscopic_inds(ts1+ts1[0])
 #%%
-K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
+# K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
+#%%
+#infgen
+jumps = 10
+nstates = 20
+strobox = stroboscopic_inds(ts1)
 
-#     #%%
+spectrum_infgen = (spectrum_1.T)[strobox,:]
+K_tens = np.zeros((jumps,nstates, nstates))
+
+picked_inds = np.sort(picking_algorithm(spectrum_infgen,nstates)[1])
+centers = spectrum_infgen[picked_inds,:]
+inds =  (NearestNeighbors()
+          .fit(centers).kneighbors(spectrum_infgen, 1, False)
+          .reshape(-1))
+#tau=1
+# # print(inds, "inds of K")
+for j in range(jumps):
+    
+    for i in range(0,len(inds)-j):
+        (K_tens[j])[inds[i], inds[i+j]] += 1
+    K_tens[j] = utils.rowstochastic(K_tens[j])
+#%%
+K = K_tens[1]
 eig_k = np.sort(np.linalg.eigvals(K))
 eigvec_k = np.linalg.eig(K)[1]
 print(eig_k)
@@ -55,30 +76,8 @@ plot_spectrum_strx(spectrum_1.T,data_1[1:,0], ts1)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 plt.show()
-
 #%%
-#infgen
-jumps = 10
-nstates = 20
-strobox = stroboscopic_inds(ts1)
-
-spectrum_infgen = (spectrum_1.T)[strobox,:]
-K_tens = np.zeros((jumps,nstates, nstates))
-
-#picked_inds = np.sort(picking_algorithm(spectrum_infgen,nstates)[1])
-centers = spectrum_infgen[picked_inds,:]
-inds =  (NearestNeighbors(metric="manhattan")
-          .fit(centers).kneighbors(spectrum_infgen, 1, False)
-          .reshape(-1))
-#tau=1
-# # print(inds, "inds of K")
-for j in range(jumps):
-    
-    for i in range(0,len(inds)-j):
-        (K_tens[j])[inds[i], inds[i+j]] += 1
-    K_tens[j] = utils.rowstochastic(K_tens[j])
-#%%
-Infgen = Newton_N(K_tens[:2], 1, 0)
+Infgen = Newton_N(K_tens[:4], 1, 0)
 eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
 chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,2)
 color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
@@ -92,3 +91,6 @@ plt.show()
 Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
 
 print(Infgen_c.diagonal(), logm(K_c).diagonal(), (K_c-np.ones(K_c.shape[0])).diagonal())
+#%%
+for i in range(chi_k.shape[1]):
+    plt.plot(aaa[picked_inds],chi_k[:,i]) 
