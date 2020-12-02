@@ -79,7 +79,7 @@ def pcca_Umodified(Uit, lambdas, dens=1):
    
  
 
-def nmf(M, lambdas, r = 3, dens=1, params = [1,1,1,1,1], weight=False):
+def nmf(M, lambdas=1, r = 3, dens=1, params = [1,1,1,1,1], weight=False):
     """Method of NMF withouth separability assumption. Use notation&method 
     described in 'Analyzing Raman Spectral Data without Separability
     Assumption', Konstantin Fackeldey, Jonas Röhm, Amir Niknejad, 

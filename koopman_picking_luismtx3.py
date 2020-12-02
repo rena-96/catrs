@@ -27,7 +27,7 @@ data_1 = np.loadtxt("matrix_2.dat")
 #%%
 spectrum_1 = data_1[1:, 50:]
 ts1 = data_1[0,50:]
-aaa = stroboscopic_inds(ts1+ts1[0])
+aaa = stroboscopic_inds(ts1)
 #%%
 # K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
 #%%
