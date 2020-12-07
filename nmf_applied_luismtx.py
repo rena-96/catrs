@@ -24,7 +24,7 @@ wavelengths = data[0,1:]
 parameters = [0., 100, 10, 1, 10]
 #M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 4, 0, parameters, weight=True) 
 
-M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=2, params=parameters, weight=False) 
+M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=3, params=parameters, weight=False) 
 #%%
 #plt.figure(figsize=(13,7))
 #plt.subplot(1, 2, 1)
@@ -58,15 +58,15 @@ M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=2, par
 plt.figure(figsize=(15,4))
 plt.suptitle('NMF&PCCA+ analysis from 0ps, mech3', fontsize=16)
 plt.subplot(1, 2, 1)
-plt.title("Plot $\chi$")
+plt.title("Plot $H_{rec}$")
 for i in range(len(Chi.T)):
-    plt.plot(Chi.T[i], label=i)
+    plt.plot(H_rec[i], label=i)
     #plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
 plt.grid()
 plt.legend()
 #plt.xlim(400,100) #flip the data
 plt.xlabel("t[ps]")#"$\lambda$/nm")
-plt.ylabel("$\chi$[i]")
+plt.ylabel("concentration")
 plt.subplot(1, 2, 2)
 plt.title("Plot $W_{rec}$")
 for i in range(len(Chi.T)):
@@ -78,7 +78,7 @@ plt.legend()
 plt.grid()
 #plt.xlim(400,100)
 plt.xlabel(r"$\nu/10^3$cm-1")
-plt.ylabel("$W_{rec}$[i]")
+plt.ylabel("$\Delta A$")
 plt.show()
 #%%
 plt.figure(figsize=(14,16))
@@ -88,12 +88,13 @@ for i in range(len(Chi.T)):
     
     plt.subplot(num)
     plt.plot(Chi.T[i], label=i)
+    
   #  plt.xticks(np.arange(len(data[0,1:]), step=30),labels=np.round(data[0,1::30]))
     plt.grid()
     plt.legend()
     plt.title("$\chi$_%d"%i)
 #    plt.xlim(400,80) #flip the data
-    plt.xlabel("$\lambda$/nm")
+    plt.xlabel("$t$/ps")
     plt.ylabel("value of the column vector")
     num+=1
 plt.show()

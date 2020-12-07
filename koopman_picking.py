@@ -80,5 +80,8 @@ color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"
 plot_spectrum_strx(spectrum,data[0,1:], data[43:,0])
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
-plt.savefig("pcca_nt_br_al_corr_vis.pdf")
+plt.savefig("pcca_nt_br_al_corr_vis.png")
 plt.show()
+#%%
+for i in range(5):
+    plt.plot()

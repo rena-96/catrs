@@ -28,10 +28,12 @@ data_1 = np.loadtxt("matrix_2.dat")
 spectrum_1 = data_1[1:, 50:]
 ts1 = data_1[0,50:]
 aaa = stroboscopic_inds(ts1)
+
 #%%
 # K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
 #%%
 #infgen
+nclus = 3
 jumps = 10
 nstates = 20
 strobox = stroboscopic_inds(ts1)
@@ -57,7 +59,7 @@ eig_k = np.sort(np.linalg.eigvals(K))
 eigvec_k = np.linalg.eig(K)[1]
 print(eig_k)
 #%%
-chi_k = cmdtools.analysis.pcca.pcca(K,2)
+chi_k = cmdtools.analysis.pcca.pcca(K,nclus)
 
 plt.imshow(K)
 plt.show()
@@ -77,9 +79,9 @@ for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 plt.show()
 #%%
-Infgen = Newton_N(K_tens[:4], 1, 0)
+Infgen = Newton_N(K_tens[:6], 1, 0)
 eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
-chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,2)
+chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
 color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
 plot_spectrum_strx(spectrum_1.T,data_1[1:,0], ts1)
 for i in range(len(picked_inds)):
@@ -93,4 +95,20 @@ Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
 print(Infgen_c.diagonal(), logm(K_c).diagonal(), (K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
 for i in range(chi_k.shape[1]):
-    plt.plot(aaa[picked_inds],chi_k[:,i]) 
+    plt.plot(aaa[picked_inds],chi_k[:,i], "-o", label="$\chi$_%d"%i) 
+    plt.grid()
+    plt.legend()
+    plt.title("$\chi$")
+    plt.ylabel("concentration")
+    plt.xlabel("time/ps")
+#    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
+plt.show()
+#%%
+plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
+plt.xlabel(r"$\nu/10^3$cm-1")
+plt.ylabel("delay time [ps]")
+plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,0]/1000))
+        #start with zero but remember to take it off from the lambdas in the data
+plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
+        
+plt.colorbar()
