@@ -33,8 +33,8 @@ S2=3*gESA_2a+gbleach_2+0.3*gESA_2b #+gSE_2, Triplet-artig Spektrum, ohne SE
 S3=2*gESA_3a+gbleach_3+0.1*gESA_3b+gSE_3  # Ein anderes Bleach Spektrum
 S4=3*gESA_4a+gbleach_4+0.3*gESA_4b+gSE_4 
 #%%
-plt.plot(S1, label="S1")
-plt.plot(S2, label="S2")
-plt.plot(S3, label="S3")
-plt.plot(S4, label="S4")
+plt.plot(n/10**3,S1, label="S1")
+plt.plot(n/10**3,S2, label="S2")
+plt.plot(n/10**3,S3, label="S3")
+plt.plot(n/10**3,S4, label="S4")
 plt.grid()

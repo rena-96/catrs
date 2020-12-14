@@ -20,7 +20,7 @@ from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 #%%
 
-data_1 = np.loadtxt("matrix_1.dat")
+data_1 = np.loadtxt("matrix_2.dat")
 # data_2 = np.loadtxt("matrix_2.dat")
 # data_3 = np.loadtxt("matrix_3.dat")
 #data = np.loadtxt('iso_br_al_cor_py2_420nm_ex_ir.txt')
@@ -33,9 +33,9 @@ aaa = stroboscopic_inds(ts1)
 # K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
 #%%
 #infgen
-nclus = 3
+nclus = 2
 jumps = 10
-nstates = 20
+nstates = 50
 strobox = stroboscopic_inds(ts1)
 
 spectrum_infgen = (spectrum_1.T)[strobox,:]
@@ -79,7 +79,7 @@ for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 plt.show()
 #%%
-Infgen = Newton_N(K_tens[:6], 1, 0)
+Infgen = Newton_N(K_tens[:4], 1, 0)
 eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
 chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
 color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
@@ -92,7 +92,7 @@ plt.show()
 #%%
 Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
 
-print(Infgen_c.diagonal(), logm(K_c).diagonal(), (K_c-np.ones(K_c.shape[0])).diagonal())
+print(1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
 for i in range(chi_k.shape[1]):
     plt.plot(aaa[picked_inds],chi_k[:,i], "-o", label="$\chi$_%d"%i) 
@@ -112,3 +112,9 @@ plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,
 plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
         
 plt.colorbar()
+#%%
+for i in [0,1]:
+    plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    # plt.plot(aaa[picked_inds],chi_k[:,i],"-o",label="$MSM-\chi$_%d"%i)
+    plt.xlabel("delaytime/ps")
+    plt.legend()

@@ -12,10 +12,10 @@ from scipy.linalg import logm
 from tools import norm_rows
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
-data = np.loadtxt("matrix_1.dat").T
+data = np.loadtxt("matrix_2.dat").T
 #%%
-spectrum = data[200:,1:]#before was 102 for the time
-times = data[200:, 0]
+spectrum = data[50:,1:]#before was 102 for the time
+times = data[50:, 0]
 wavelengths = data[0,1:]
 #for i in range(spectrum.shape[0]):
 #    spectrum[i,:]-=spectrum[95,:]
