@@ -20,10 +20,7 @@ from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 #%%
 
-data_1 = np.loadtxt("matrix_2.dat")
-# data_2 = np.loadtxt("matrix_2.dat")
-# data_3 = np.loadtxt("matrix_3.dat")
-#data = np.loadtxt('iso_br_al_cor_py2_420nm_ex_ir.txt')
+data_1 = np.loadtxt('br_py2_exec400.txt').T
 #%%
 spectrum_1 = data_1[1:, 50:]
 ts1 = data_1[0,50:]
@@ -33,9 +30,9 @@ aaa = stroboscopic_inds(ts1)
 # K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
 #%%
 #infgen
-nclus = 4
+nclus = 5
 jumps = 10
-nstates = 50
+nstates = 30
 strobox = stroboscopic_inds(ts1)
 
 spectrum_infgen = (spectrum_1.T)[strobox,:]
@@ -101,7 +98,7 @@ for i in range(chi_k.shape[1]):
     plt.title("$\chi$")
     plt.ylabel("concentration")
     plt.xlabel("time/ps")
-#    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
+    plt.xticks(ticks=np.arange(len(aaa), step=30),labels=aaa[::30])
 plt.show()
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
@@ -109,7 +106,7 @@ plt.xlabel(r"$\nu/10^3$cm-1")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,0]/1000))
         #start with zero but remember to take it off from the lambdas in the data
-plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
+plt.yticks(np.arange(len(aaa), step=10),labels=np.round(aaa[::10],2))
         
 plt.colorbar()
 #%%

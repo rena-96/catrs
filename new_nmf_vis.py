@@ -12,14 +12,14 @@ from scipy.linalg import logm
 from tools import norm_rows
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
-data = np.loadtxt("matrix_2.dat").T
+data = np.loadtxt('br_py2_exec400.txt')
 #%%
 spectrum = data[50:,1:]#before was 102 for the time
 times = data[50:, 0]
 wavelengths = data[0,1:]
 #for i in range(spectrum.shape[0]):
 #    spectrum[i,:]-=spectrum[95,:]
-nclus = 3
+nclus = 5
 # parameters = [0, -100., 100., 1., 10.]
 parameters = [0., 100, 10, 1, 10]
 #M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 4, 0, parameters, weight=True) 
