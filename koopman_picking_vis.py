@@ -94,13 +94,15 @@ print(1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])
 #%%
 for i in range(chi_k.shape[1]):
     plt.plot(aaa[picked_inds],chi_k[:,i], "-o", label="$\chi$_%d"%i) 
-    plt.grid()
+    
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
     plt.ylabel("concentration")
     plt.xlabel("time/ps")
     
-    plt.xticks(ticks=np.arange(len(aaa[picked_inds]), step=5),labels=(aaa[picked_inds])[::5])
+    # plt.xticks(ticks=aaa[::2], labels=(aaa[::2]))
+#    
+plt.grid()
 plt.show()
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
