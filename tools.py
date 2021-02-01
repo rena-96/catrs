@@ -136,7 +136,7 @@ def voronoi_koopman_picking(X, nstates, timeseries, dt):
     return utils.rowstochastic(K), X_new,picked_inds
     
     
-def plot_spectrum_strx(X, ls,ts, strobox=True):
+def plot_spectrum_strx(X, ls,ts, step_=60, strobox=True):
     """X: spectrum, ls=wavelengths,ts=time"""
     if strobox==True:
         strobox = stroboscopic_inds(ts)
@@ -150,7 +150,7 @@ def plot_spectrum_strx(X, ls,ts, strobox=True):
         plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
         plt.xlabel("$\lambda$ [nm]")
         plt.ylabel("delay time [ps]")
-        plt.xticks(np.arange(len(ls), step=60),labels=np.round(ls[1::60]))
+        plt.xticks(np.arange(len(ls), step=step_),labels=np.round(ls[1::step_]))
         #start with zero but remember to take it off from the lambdas in the data
         plt.yticks(np.arange(len(ts_new), step=step_),labels=np.round(ts_new[::step_],2))
         
@@ -190,3 +190,14 @@ def analyse_spectrum_picking_alg(spectrum, timesteps, no_centers):
     K_c = pinv(Chi_).dot(Koopman.dot(Chi_))
     return(K_c, Chi_, picked_ind)
 
+def hard_chi(X_vecs):
+    """Tranform the chi vectors with indicator function
+    ---write better descr"""
+    X_new = np.zeros(X_vecs.shape)
+    maxs = np.argmax((X_vecs), axis=1)
+    for i in range(X_vecs.shape[0]):
+        X_new[i,maxs[i]] = 1.
+    return(X_new)
+        
+    
+    

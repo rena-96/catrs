@@ -32,7 +32,7 @@ plt.figure(figsize=(15,4))
 plt.suptitle('NMF&PCCA+ analysis from 100ps, mech1', fontsize=16)
 plt.subplot(1, 2, 1)
 plt.title("Plot $H_{rec}$")
-for i in range(len(Chi.T)):
+for i in range(4):
     plt.plot(H_rec[i], label=i)
     #plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
 plt.grid()
@@ -42,7 +42,7 @@ plt.xlabel("t[ps]")#"$\lambda$/nm")
 plt.ylabel("concentration")
 plt.subplot(1, 2, 2)
 plt.title("Plot $W_{rec}$")
-for i in range(len(Chi.T)):
+for i in range(4):
     plt.plot(W_rec.T[i], label=i)
 plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
@@ -56,7 +56,7 @@ plt.show()
 #%%
 plt.figure(figsize=(14,16))
 num = 321
-for i in range(len(Chi.T)):
+for i in range(4):
 #    plt.figure(figsize=(10,4))
     
     plt.subplot(num)
@@ -99,3 +99,4 @@ plt.show()
 #fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[50:,2],  data[94:,0])
 
 diagp = np.diagonal(-1/logm(P_rec))
+#%%

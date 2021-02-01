@@ -12,7 +12,7 @@ import os
 from scipy.linalg import svd, pinv, logm
 from sklearn.cluster import KMeans
 import cmdtools
-from tools import voronoi_koopman_picking, plot_spectrum_strx, stroboscopic_inds
+from tools import voronoi_koopman_picking, plot_spectrum_strx, stroboscopic_inds, hard_chi
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
@@ -58,7 +58,7 @@ eigvec_k = np.linalg.eig(K)[1]
 print(eig_k)
 #%%
 chi_k = cmdtools.analysis.pcca.pcca(K,nclus)
-
+chi_k_hard = hard_chi(chi_k)
 plt.imshow(K)
 plt.show()
 plt.plot(eig_k, "-o")
@@ -92,17 +92,19 @@ Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
 
 print(1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
+labels = ["A","B","C","D","E"]
 for i in range(chi_k.shape[1]):
-    plt.plot(aaa[picked_inds],chi_k[:,i], "-o", label="$\chi$_%d"%i) 
+    plt.plot(ts1[aaa[picked_inds]],chi_k_hard[:,i], "-o", label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
     plt.ylabel("concentration")
     plt.xlabel("time/ps")
     
-    # plt.xticks(ticks=aaa[::2], labels=(aaa[::2]))
-#    
-plt.grid()
+plt.grid()  
+plt.xscale("linear")  
+#plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
+
 plt.show()
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
@@ -117,11 +119,35 @@ plt.show()
 #%%
 for i in [0,1,2]:
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(aaa[picked_inds],chi_k[:,i],"-o",label="$MSM-\chi$_%d"%i)
+    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i],"-o",label="$MSM-\chi$_%d"%i)
     plt.xlabel("delaytime/ps")
 plt.grid()
 plt.legend()
 plt.show()
 #%%
 # #dass
-# DAS = pinv(chi_k).dot(spectrum_infgen)
+DAS = pinv(chi_k).dot(centers)
+#%%
+plt.figure(figsize=(12,7))
+for i in range(chi_k.shape[1]):
+    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    plt.plot(data_1[1:,0],DAS[i,:],"-.",label="$MSM-S$_%d"%i)
+    plt.xlabel("wavelength $\lambda$/nm")
+plt.grid()
+plt.legend()
+plt.show()
+#%%
+plt.figure(figsize=(12,7))
+for i in range(chi_k.shape[1]):
+    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    plt.plot(data_1[95:,0],DAS[i,94:],"-.",label="$MSM-S$_%d"%i)
+    plt.xlabel("wavelength $\lambda$/nm")
+plt.grid()
+plt.legend()
+plt.show()
+#%%
+K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))
+#     print(np.sum(K_c[i], axis =1))
+plt.imshow(K_c_hard)
+plt.colorbar()
+    
