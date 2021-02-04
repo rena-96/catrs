@@ -213,7 +213,7 @@ def Koopman(spectrum,timeseries,nstates=50,jumps=10):
     #tau=1
     # # print(inds, "inds of K")
     for j in range(jumps):
-        print("j", j)
+        
         for i in range(0,len(inds)-j):
             (K_tens[j])[inds[i], inds[i+j]] += 1
             

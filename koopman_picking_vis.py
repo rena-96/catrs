@@ -19,6 +19,7 @@ from cmdtools.estimation.picking_algorithm import picking_algorithm
 from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 import networkx
+from check_commutator import check_commutator
 #%%
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
@@ -140,3 +141,5 @@ plt.show()
 K_c_graph_soft = networkx.from_numpy_matrix(K_c)
 networkx.draw(K_c_graph_soft, with_labels=True, font_weight='bold')
 plt.show()
+#%%
+check_commutator(K,nclus=5)
