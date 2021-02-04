@@ -12,12 +12,13 @@ import os
 from scipy.linalg import svd, pinv, logm
 from sklearn.cluster import KMeans
 import cmdtools
-from tools import voronoi_koopman_picking, plot_spectrum_strx, stroboscopic_inds, hard_chi
+from tools import voronoi_koopman_picking, plot_spectrum_strx, Koopman, stroboscopic_inds, hard_chi
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
 from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
+import networkx
 #%%
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
@@ -27,30 +28,15 @@ spectrum_1 = data_1[1:, 50:]
 ts1 = data_1[0,50:]
 aaa = stroboscopic_inds(ts1)
 
-#%%
-# K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
+
 #%%
 #infgen
 nclus = 5
-jumps = 10
-nstates = 50
-strobox = stroboscopic_inds(ts1)
+jumps = 2
+nstates = 20
 
-spectrum_infgen = (spectrum_1.T)[strobox,:]
-K_tens = np.zeros((jumps,nstates, nstates))
+spectrum_infgen, picked_inds,centers, K_tens = Koopman(spectrum_1, ts1)
 
-picked_inds = np.sort(picking_algorithm(spectrum_infgen,nstates)[1])
-centers = spectrum_infgen[picked_inds,:]
-inds =  (NearestNeighbors()
-          .fit(centers).kneighbors(spectrum_infgen, 1, False)
-          .reshape(-1))
-#tau=1
-# # print(inds, "inds of K")
-for j in range(jumps):
-    
-    for i in range(0,len(inds)-j):
-        (K_tens[j])[inds[i], inds[i+j]] += 1
-    K_tens[j] = utils.rowstochastic(K_tens[j])
 #%%
 K = K_tens[1]
 eig_k = np.sort(np.linalg.eigvals(K))
@@ -71,7 +57,7 @@ K_c =  pinv(chi_k).dot(K.dot(chi_k))#/ (pinv(chi_k).dot(chi_k)))
 plt.imshow(K_c)
 plt.colorbar()
 #     #%%
-color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
+color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 plot_spectrum_strx(spectrum_1.T,data_1[1:,0], ts1)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
@@ -80,7 +66,6 @@ plt.show()
 Infgen = Newton_N(K_tens[:4], 1, 0)
 eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
 chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
-color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
 plot_spectrum_strx(spectrum_1.T,data_1[1:,0], ts1)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
@@ -94,7 +79,7 @@ print(1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])
 #%%
 labels = ["A","B","C","D","E"]
 for i in range(chi_k.shape[1]):
-    plt.plot(ts1[aaa[picked_inds]],chi_k_hard[:,i], "-o", label=labels[i])#"$\chi$_%d"%i) 
+    plt.plot(ts1[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
@@ -119,7 +104,7 @@ plt.show()
 #%%
 for i in [0,1,2]:
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i],"-o",label="$MSM-\chi$_%d"%i)
+    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i],"-o",color= color_list[i],label="$MSM-\chi$_%d"%i)
     plt.xlabel("delaytime/ps")
 plt.grid()
 plt.legend()
@@ -131,7 +116,7 @@ DAS = pinv(chi_k).dot(centers)
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(data_1[1:,0],DAS[i,:],"-.",label="$MSM-S$_%d"%i)
+    plt.plot(data_1[1:,0],DAS[i,:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
     plt.xlabel("wavelength $\lambda$/nm")
 plt.grid()
 plt.legend()
@@ -140,7 +125,7 @@ plt.show()
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(data_1[95:,0],DAS[i,94:],"-.",label="$MSM-S$_%d"%i)
+    plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
     plt.xlabel("wavelength $\lambda$/nm")
 plt.grid()
 plt.legend()
@@ -150,4 +135,8 @@ K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))
 #     print(np.sum(K_c[i], axis =1))
 plt.imshow(K_c_hard)
 plt.colorbar()
-    
+plt.show()
+#%%
+K_c_graph_soft = networkx.from_numpy_matrix(K_c)
+networkx.draw(K_c_graph_soft, with_labels=True, font_weight='bold')
+plt.show()

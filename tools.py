@@ -199,5 +199,23 @@ def hard_chi(X_vecs):
         X_new[i,maxs[i]] = 1.
     return(X_new)
         
-    
-    
+def Koopman(spectrum,timeseries,nstates=50,jumps=10):
+    strobox = stroboscopic_inds(timeseries)
+
+    spectrum_strbx = (spectrum.T)[strobox,:]
+    K_tens = np.zeros((jumps,nstates, nstates))
+
+    picked_inds = np.sort(picking_algorithm(spectrum_strbx,nstates)[1])
+    centers = spectrum_strbx[picked_inds,:]
+    inds =  (NearestNeighbors()
+          .fit(centers).kneighbors(spectrum_strbx, 1, False)
+          .reshape(-1))
+    #tau=1
+    # # print(inds, "inds of K")
+    for j in range(jumps):
+        print("j", j)
+        for i in range(0,len(inds)-j):
+            (K_tens[j])[inds[i], inds[i+j]] += 1
+            
+        K_tens[j] = utils.rowstochastic(K_tens[j])
+    return(spectrum_strbx, picked_inds,centers, K_tens)
