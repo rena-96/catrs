@@ -17,14 +17,16 @@ def weighted_metric(A,B,W, p=2):
     
     dist = cdist(A, B, metric="minkowski",p=2, w=W)
     return(dist)
+
+
 def nn_weighted(A,B,W):
     inds =  (NearestNeighbors(metric="wminkowski", metric_params={"w":W})
-          .fit(centers).kneighbors(spectrum_strbx, 1, False)
+          .fit(B).kneighbors(A, 1, False)
           .reshape(-1))
     return(inds)
     
-a = np.array([[0,0,0],[0,0,0],[0,0,0]])
-b = np.array([[1,1,1],[2,2,2]])
-w = np.array([1,2,3])
-pc = weighted_metric(a,b,w)
+# a = np.array([[0,0,0],[0,0,0],[2,2,2]])
+# b = np.array([[1,1,1],[2,2,2]])
+# w = np.array([1,2,3])
+# pc = weighted_metric(a,b,w)
 print(weighted_metric(a,b,w),nn_weighted(a, b, w) )

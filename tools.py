@@ -16,33 +16,7 @@ import cmdtools
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
 #%%
-def avg_spectrum(M, avg):
-    check_divisibility =  M.shape[1]%avg
-    if not int(check_divisibility)==0:
-        raise AssertionError("Try another value for the number of lambdas to average upon")
 
-    avg_matrix = np.zeros((M.shape[0],int(M.shape[1]/avg)))
-    for i in range(int(M.shape[1]/avg)):
-        avg_matrix[:,i] = np.mean(M[:,i*avg:(i+1)*avg], axis=1)
-    return(avg_matrix)
-def norm_rows(M, avg=1):
-    '''Norm easily first to make every wavelength at everytime 
-    of equal importance'''
-    M = avg_spectrum(M,avg)
-    return M/np.sum(M, axis =0)
-
-
-def norm_IR( lambdas):
-    new_M = []
-    max_lambda = np.amax(lambdas[:-1]-lambdas[1:])
-    for i in range(len(lambdas)-1):
-        diff = abs(lambdas[i]-lambdas[i+1])
-        if abs(diff - max_lambda)<= 0.2*max_lambda:
-            new_M.append(i)
-        else:
-            continue
-    return(new_M)
-    
 def pi_pcca(lambdas):
     """Compute the weights of the time-resolved spectrum for a specific 
     value of lambda to consider in the PCCA+ algorithm. The smallest 
@@ -118,22 +92,7 @@ def voronoi_koopman(X, centers,nstates, timeseries, dt):
     print(K)
     return utils.rowstochastic(K)
 
-def voronoi_koopman_picking(X, nstates, timeseries, dt):
-    strobox = stroboscopic_inds(timeseries)
-    print(strobox)
-    X_new = X[strobox,:]
-    K = np.zeros((nstates, nstates))
-    picked_inds = np.sort(picking_algorithm(X_new,nstates)[1])
-    centers = X_new[picked_inds,:]
-    inds =  (NearestNeighbors()
-            .fit(centers).kneighbors(X_new, 1, False)
-            .reshape(-1))
-    #tau=1
-    # print(inds, "inds of K")
-    for i in range(0,len(inds)-1, int(dt)):
-            K[inds[i], inds[i+1]] += 1
-    #print(K)
-    return utils.rowstochastic(K), X_new,picked_inds
+
     
     
 def plot_spectrum_strx(X, ls,ts, step_=60, strobox=True):
@@ -199,16 +158,21 @@ def hard_chi(X_vecs):
         X_new[i,maxs[i]] = 1.
     return(X_new)
         
-def Koopman(spectrum,timeseries,nstates=50,jumps=10):
+def Koopman(X,timeseries,nstates=50,jumps=10, w=None):
     strobox = stroboscopic_inds(timeseries)
 
-    spectrum_strbx = (spectrum.T)[strobox,:]
+    X_strbx = (X.T)[strobox,:]
     K_tens = np.zeros((jumps,nstates, nstates))
 
-    picked_inds = np.sort(picking_algorithm(spectrum_strbx,nstates)[1])
-    centers = spectrum_strbx[picked_inds,:]
-    inds =  (NearestNeighbors()
-          .fit(centers).kneighbors(spectrum_strbx, 1, False)
+    picked_inds = np.sort(picking_algorithm(X_strbx,nstates)[1])
+    centers = X_strbx[picked_inds,:]
+    if w.all()==None:
+        inds =  (NearestNeighbors()
+          .fit(centers).kneighbors(X_strbx, 1, False)
+          .reshape(-1))
+    else: 
+        inds =  (NearestNeighbors(metric="wminkowski", metric_params={"w":w})
+          .fit(centers).kneighbors(X_strbx, 1, False)
           .reshape(-1))
     #tau=1
     # # print(inds, "inds of K")
@@ -218,4 +182,9 @@ def Koopman(spectrum,timeseries,nstates=50,jumps=10):
             (K_tens[j])[inds[i], inds[i+j]] += 1
             
         K_tens[j] = utils.rowstochastic(K_tens[j])
-    return(spectrum_strbx, picked_inds,centers, K_tens)
+    return(X_strbx, picked_inds,centers, K_tens)
+def nn_weighted(A,B,W):
+    inds =  (NearestNeighbors(metric="wminkowski", metric_params={"w":W})
+          .fit(B).kneighbors(A, 1, False)
+          .reshape(-1))
+    return(inds)
