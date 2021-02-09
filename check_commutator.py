@@ -22,8 +22,10 @@ def check_commutator(X, nclus=3):
         X_pw_c = pinv(chi_pw).dot(X_pw.dot(chi_pw)) 
         if np.linalg.matrix_power(X_c,power).all()==X_pw_c.all():
             condition = 1
+            print("Commutation relation fulfilled!")
         else: 
             power = power+1
+            
     return(X_c, X_pw_c, power)
     
 

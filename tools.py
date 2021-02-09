@@ -10,6 +10,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.linalg import svd, pinv
 from scipy.optimize import fmin
+from scipy.spatial import distance
 from sklearn.neighbors import NearestNeighbors
 from sklearn.cluster import KMeans
 import cmdtools
@@ -170,8 +171,9 @@ def Koopman(X,timeseries,nstates=50,jumps=10, w=None):
         inds =  (NearestNeighbors()
           .fit(centers).kneighbors(X_strbx, 1, False)
           .reshape(-1))
-    else: 
-        inds =  (NearestNeighbors(metric="wminkowski", metric_params={"w":w})
+    else:
+        w_dist = distance.cdist(X_strbx, centers,metric="sqeuclidean"  w=w)
+        inds =  (NearestNeighbors(metric="precomputed")
           .fit(centers).kneighbors(X_strbx, 1, False)
           .reshape(-1))
     #tau=1
