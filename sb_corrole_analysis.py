@@ -25,23 +25,24 @@ from check_commutator import check_commutator
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 file = np.load("SB_corrole_400nm.npz")
 data_1 = file["data"][0,:,:,0,:]
-wl = file["wl"]
+wl = file["wl"][:,0]
 ts = file["t"]
 
 #%%
-spectrum_1 = np.mean(data_1, axis=2)
-#start analysis at 300 fs 
-ts = ts[46:]
-spectrum_1 = spectrum_1[46:,:]
+spectrum_1 = np.nanmean(data_1, axis=2)
+#start analysis at 300 fs  and 
+ts = ts[46:]*0.01
+wl = wl[510:1500]
+spectrum_1 = spectrum_1[46:,510:1500]
 aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
 nclus = 5
-jumps = 2
-nstates = 20
+jumps = 5
+nstates = 50
 
-spectrum_infgen, picked_inds,centers, K_tens = Koopman(spectrum_1.T, ts, w=10**7/wl)
+spectrum_infgen, picked_inds,centers, K_tens = Koopman(spectrum_1.T, ts,jumps=jumps, nstates=nstates, w=10**7/wl)
 
 #%%
 K = K_tens[1]
@@ -68,6 +69,8 @@ plot_spectrum_strx(spectrum_1.T,wl, ts)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 plt.show()
+#%%
+K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))
 #%%
 Infgen = Newton_N(K_tens[:3], 1, 0)
 eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
@@ -128,20 +131,20 @@ plt.grid()
 plt.legend()
 plt.show()
 #%%
-plt.figure(figsize=(12,7))
-for i in range(chi_k.shape[1]):
-    #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
-    plt.xlabel("wavelength $\lambda$/nm")
-plt.grid()
-plt.legend()
-plt.show()
+# plt.figure(figsize=(12,7))
+# for i in range(chi_k.shape[1]):
+#     #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
+#     plt.plot(ts,DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
+#     plt.xlabel("wavelength $\lambda$/nm")
+# plt.grid()
+# plt.legend()
+# plt.show()
 #%%
-K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))
+
 #     print(np.sum(K_c[i], axis =1))
-plt.imshow(K_c_hard)
-plt.colorbar()
-plt.show()
+# plt.imshow(K_c_hard)
+# plt.colorbar()
+# plt.show()
 #%%
 # K_c_graph_soft = networkx.from_numpy_matrix(K_c)
 # networkx.draw(K_c_graph_soft, with_labels=True, font_weight='bold')
