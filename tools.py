@@ -172,11 +172,9 @@ def Koopman(X,timeseries,nstates=50,jumps=10, w=None):
           .fit(centers).kneighbors(X_strbx, 1, False)
           .reshape(-1))
     else:
-        w_dist = distance.cdist(X_strbx, centers,metric="sqeuclidean"  w=w)
-        inds =  (NearestNeighbors(metric="precomputed")
-          .fit(centers).kneighbors(X_strbx, 1, False)
-          .reshape(-1))
-    #tau=1
+        w_sqrt = np.sqrt(w)
+        w_dist = distance.cdist(w*X_strbx, w*centers,metric="sqeuclidean")
+        inds =  np.argmin(w_dist, axis=1)
     # # print(inds, "inds of K")
     for j in range(jumps):
         

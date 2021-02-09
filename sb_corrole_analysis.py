@@ -23,19 +23,25 @@ from check_commutator import check_commutator
 #%%
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
-data_1 = np.loadtxt("br_py2_exec400.txt").T
+file = np.load("SB_corrole_400nm.npz")
+data_1 = file["data"][0,:,:,0,:]
+wl = file["wl"]
+ts = file["t"]
+
 #%%
-spectrum_1 = data_1[1:, 50:]
-ts1 = data_1[0,50:]
-aaa = stroboscopic_inds(ts1)
-wl = data_1[1:,0]
+spectrum_1 = np.mean(data_1, axis=2)
+#start analysis at 300 fs 
+ts = ts[46:]
+spectrum_1 = spectrum_1[46:,:]
+aaa = stroboscopic_inds(ts)
+
 #%%
 #infgen
 nclus = 5
 jumps = 2
 nstates = 20
 
-spectrum_infgen, picked_inds,centers, K_tens = Koopman(spectrum_1, ts1, w=10**7/wl)
+spectrum_infgen, picked_inds,centers, K_tens = Koopman(spectrum_1.T, ts, w=10**7/wl)
 
 #%%
 K = K_tens[1]
@@ -58,7 +64,7 @@ plt.imshow(K_c)
 plt.colorbar()
 #     #%%
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
-plot_spectrum_strx(spectrum_1.T,wl, ts1)
+plot_spectrum_strx(spectrum_1.T,wl, ts)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 plt.show()
@@ -66,7 +72,7 @@ plt.show()
 Infgen = Newton_N(K_tens[:3], 1, 0)
 eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
 chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
-plot_spectrum_strx(spectrum_1.T,wl, ts1)
+plot_spectrum_strx(spectrum_1.T,wl, ts)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
 # plt.savefig("pcca_nt_br_al_corr_vis.pdf")
@@ -79,7 +85,7 @@ print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.one
 #%%
 labels = ["A","B","C","D","E"]
 for i in range(chi_k.shape[1]):
-    plt.plot(ts1[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
+    plt.plot(ts[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
@@ -103,8 +109,8 @@ plt.colorbar()
 plt.show()
 #%%
 for i in [0,1,2]:
-    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i],"-o",color= color_list[i],label="$MSM-\chi$_%d"%i)
+    #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    plt.plot(ts[aaa[picked_inds]],chi_k[:,i],"-o",color= color_list[i],label="$MSM-\chi$_%d"%i)
     plt.xlabel("delaytime/ps")
 plt.grid()
 plt.legend()
@@ -115,7 +121,7 @@ DAS = pinv(chi_k).dot(centers)
 #%%
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
-    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
     plt.plot(wl,DAS[i,:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
     plt.xlabel("wavelength $\lambda$/nm")
 plt.grid()
@@ -124,7 +130,7 @@ plt.show()
 #%%
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
-    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
     plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
     plt.xlabel("wavelength $\lambda$/nm")
 plt.grid()
