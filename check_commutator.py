@@ -28,6 +28,29 @@ def check_commutator(X, nclus=3):
             
     return(X_c, X_pw_c, power)
     
-
+def check_dd_commutator(X, nclus=3, tau_2_check=1):
+    """function to check if the projection and the propagation commute
+    G(Xc**k)=G(Xc)**k
+    Matrix X is a tensor, first dimension is the n*tau
+    This function provides a data-driven commutator"""
+    nclus = int(nclus)
+    tau_2_check = int(tau_2_check)
+    #projection
+   
+    chi = cmdtools.analysis.pcca.pcca(X[1,:,:],nclus)
+    X_c = pinv(chi).dot(X.dot(chi))
+    #propagation
+    X_2check = 2
+    while condition==0 and power<10:
+        X_pw = np.linalg.matrix_power(X, power)
+        chi_pw = cmdtools.analysis.pcca.pcca(X_pw,nclus)
+        X_pw_c = pinv(chi_pw).dot(X_pw.dot(chi_pw)) 
+        if np.linalg.matrix_power(X_c,power).all()==X_pw_c.all():
+            condition = 1
+            print("Commutation relation fulfilled!")
+        else: 
+            power = power+1
+            
+    return(X_c, X_pw_c, power)
     
     
