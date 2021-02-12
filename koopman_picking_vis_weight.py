@@ -33,9 +33,8 @@ wl = data_1[1:,0]
 #infgen
 nclus = 5
 jumps = 2
-nstates = 20
-
-spectrum_infgen, picked_inds,centers, K_tens = Koopman(spectrum_1, ts1, w=10**7/wl)
+nstates = 50
+spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=20)
 
 #%%
 K = K_tens[1]
@@ -46,14 +45,21 @@ print(eig_k)
 chi_k = cmdtools.analysis.pcca.pcca(K,nclus)
 chi_k_hard = hard_chi(chi_k)
 plt.imshow(K)
+
 plt.show()
 plt.plot(eig_k, "-o")
 plt.show()
-plt.imshow(chi_k, aspect="auto")
+#%%
+plt.imshow(chi_k_hard, aspect="auto")
+plt.yticks(ticks=[])
+plt.title("$\chi$")
+plt.ylabel("cells")
+plt.colorbar()
 plt.show()
      #%%
 K_c =  pinv(chi_k).dot(K.dot(chi_k))#/ (pinv(chi_k).dot(chi_k)))
 #     print(np.sum(K_c[i], axis =1))
+K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
 plt.imshow(K_c)
 plt.colorbar()
 #     #%%
@@ -82,7 +88,7 @@ for i in range(chi_k.shape[1]):
     plt.plot(ts1[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
-    plt.title(r"$\chi$ of $K(\tau)$")
+    plt.title(r"$\chi_{hard}$ of $K(\tau)$")
     plt.ylabel("concentration")
     plt.xlabel("time/ps")
     
@@ -122,13 +128,33 @@ plt.grid()
 plt.legend()
 plt.show()
 #%%
-plt.figure(figsize=(12,7))
+plt.figure(figsize=(18,6))
+plt.suptitle("$\chi$ and species \n-product ansatz")
+plt.subplot(1,2,1)
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
     plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
     plt.xlabel("wavelength $\lambda$/nm")
+    plt.title("Species")
 plt.grid()
 plt.legend()
+plt.subplot(1,2,2)
+
+labels = ["A","B","C","D","E"]
+for i in range(chi_k.shape[1]):
+    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
+    
+    plt.legend()
+    plt.title(r"$\chi$ of $K(\tau)$")
+    plt.ylabel("concentration")
+    plt.xlabel("time/ps")
+    
+plt.grid()  
+plt.xscale("linear")  
+#plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
+
+
+
 plt.show()
 #%%
 K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))
@@ -142,3 +168,4 @@ plt.show()
 # plt.show()
 #%%
 check_commutator(K,nclus=5)
+#%%

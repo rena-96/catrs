@@ -42,7 +42,7 @@ nclus = 5
 jumps = 5
 nstates = 30
 
-spectrum_infgen, picked_inds,centers, K_tens = Koopman(spectrum_1.T, ts,jumps=jumps, nstates=nstates, w=10**7/wl)
+spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl)
 
 #%%
 K = K_tens[1]
