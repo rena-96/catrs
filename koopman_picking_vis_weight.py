@@ -57,9 +57,11 @@ plt.ylabel("cells")
 plt.colorbar()
 plt.show()
      #%%
-K_c =  pinv(chi_k).dot(K.dot(chi_k))#/ (pinv(chi_k).dot(chi_k)))
+# S_c = chi_k.T.dot(chi_k)/(chi_k.T.dot())
+T_c = pinv(chi_k).dot(K.dot(chi_k))
+K_c = chi_k.T.dot(K.dot(chi_k))
 #     print(np.sum(K_c[i], axis =1))
-K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
+K_c_hard =  chi_k_hard.T.dot(K.dot(chi_k_hard))
 plt.imshow(K_c)
 plt.colorbar()
 #     #%%
