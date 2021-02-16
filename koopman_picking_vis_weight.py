@@ -9,17 +9,17 @@ Created on Tue Sep 22 12:08:06 2020
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-from scipy.linalg import svd, pinv, logm
+from scipy.linalg import svd, pinv, logm, eig
 from sklearn.cluster import KMeans
 import cmdtools
 from tools import plot_spectrum_strx, Koopman, stroboscopic_inds, hard_chi, nn_weighted
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
-from cmdtools.estimation.picking_algorithm import picking_algorithm
 from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 import networkx
 from check_commutator import check_commutator
+from reduction_projection import proj
 #%%
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
@@ -59,7 +59,9 @@ plt.show()
      #%%
 # S_c = chi_k.T.dot(chi_k)/(chi_k.T.dot())
 T_c = pinv(chi_k).dot(K.dot(chi_k))
-K_c = chi_k.T.dot(K.dot(chi_k))
+K_c2 = pinv(chi_k).dot(K.dot(chi_k))
+K_c1 = pinv(chi_k.T.dot(chi_k)).dot(chi_k.T.dot(K.dot(chi_k)))
+K_c = proj(K,nclus)
 #     print(np.sum(K_c[i], axis =1))
 K_c_hard =  chi_k_hard.T.dot(K.dot(chi_k_hard))
 plt.imshow(K_c)
@@ -84,6 +86,7 @@ plt.show()
 Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
 Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
 print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
+print("soft", 1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
 labels = ["A","B","C","D","E"]
 for i in range(chi_k.shape[1]):
