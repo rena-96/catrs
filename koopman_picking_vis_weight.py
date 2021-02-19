@@ -34,7 +34,7 @@ wl = data_1[1:,0]
 nclus = 5
 jumps = 2
 nstates = 50
-spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=20)
+spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=50, picked_weights=True)
 
 #%%
 K = K_tens[1]
@@ -42,7 +42,7 @@ eig_k = np.sort(np.linalg.eigvals(K))
 eigvec_k = np.linalg.eig(K)[1]
 print(eig_k)
 #%%
-chi_k = cmdtools.analysis.pcca.pcca(K,nclus)
+chi_k = cmdtools.analysis.pcca.pcca(K,nclus, pi="uniform")
 chi_k_hard = hard_chi(chi_k)
 plt.imshow(K)
 
@@ -85,10 +85,10 @@ plt.show()
 #%%
 Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
 Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
-print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
+#print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
 print("soft", 1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
-labels = ["A","B","C","D","E"]
+labels = ["A","B","C","D","E", "F","G"]
 for i in range(chi_k.shape[1]):
     plt.plot(ts1[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
@@ -145,7 +145,7 @@ plt.grid()
 plt.legend()
 plt.subplot(1,2,2)
 
-labels = ["A","B","C","D","E"]
+labels = ["A","B","C","D","E", "F","G"]
 for i in range(chi_k.shape[1]):
     plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     

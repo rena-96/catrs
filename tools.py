@@ -159,13 +159,16 @@ def hard_chi(X_vecs):
         X_new[i,maxs[i]] = 1.
     return(X_new)
         
-def Koopman(X,timeseries,w,nstates=50,jumps=10):
+def Koopman(X,timeseries,w,nstates=50,jumps=10, picked_weights=False):
     strobox = stroboscopic_inds(timeseries)
     
     X_strbx = (X)[strobox,:]
     K_tens = np.zeros((jumps,nstates, nstates))
-
-    picked_inds = np.sort(picking_algorithm(X_strbx,nstates)[1])
+    w_sqrt = np.sqrt(w)
+    if picked_weights==False:
+        picked_inds = np.sort(picking_algorithm(X_strbx,nstates)[1])
+    else:
+        picked_inds = np.sort(picking_algorithm(w_sqrt*X_strbx,nstates)[1])
     centers = X_strbx[picked_inds,:]
     # if w==None:
         # print("Hello")
@@ -173,7 +176,7 @@ def Koopman(X,timeseries,w,nstates=50,jumps=10):
     dist = distance.cdist(X_strbx, centers,metric="sqeuclidean")
     inds1 =  np.argmin(dist, axis=1)
     # else:
-    w_sqrt = np.sqrt(w)
+    
     w_dist = distance.cdist(w_sqrt*X_strbx, w_sqrt*centers,metric="sqeuclidean")
     inds =  np.argmin(w_dist, axis=1)
     # # print(inds, "inds of K")
