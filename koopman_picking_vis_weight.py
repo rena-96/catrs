@@ -19,7 +19,7 @@ from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 import networkx
 from check_commutator import check_commutator
-from reduction_projection import proj
+from reduction_projection import proj, rebinding
 #%%
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
@@ -31,10 +31,10 @@ aaa = stroboscopic_inds(ts1)
 wl = data_1[1:,0]
 #%%
 #infgen
-nclus = 5
+nclus = 4
 jumps = 2
-nstates = 50
-spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=50, picked_weights=True)
+nstates = 40
+spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=nstates, picked_weights=True)
 
 #%%
 K = K_tens[1]
@@ -59,14 +59,16 @@ plt.show()
      #%%
 # S_c = chi_k.T.dot(chi_k)/(chi_k.T.dot())
 T_c = pinv(chi_k).dot(K.dot(chi_k))
-K_c2 = pinv(chi_k).dot(K.dot(chi_k))
+K_c = pinv(chi_k).dot(K.dot(chi_k))
 K_c1 = pinv(chi_k.T.dot(chi_k)).dot(chi_k.T.dot(K.dot(chi_k)))
-K_c = proj(K,nclus)
+K_c2 = proj(K,nclus, pi="statdistr")
+reb = rebinding(K, nclus, pi="statdistr")
+#%%
 #     print(np.sum(K_c[i], axis =1))
 K_c_hard =  chi_k_hard.T.dot(K.dot(chi_k_hard))
 plt.imshow(K_c)
 plt.colorbar()
-#     #%%
+#%%
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 plot_spectrum_strx(spectrum_1.T,wl, ts1)
 for i in range(len(picked_inds)):
@@ -84,6 +86,7 @@ plt.show()
 
 #%%
 Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
+reb_q = rebinding(Infgen, nclus, pi="uniform")
 Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
 #print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
 print("soft", 1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
@@ -113,13 +116,13 @@ plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
 plt.colorbar()
 plt.show()
 #%%
-for i in [0,1,2]:
-    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i],"-o",color= color_list[i],label="$MSM-\chi$_%d"%i)
-    plt.xlabel("delaytime/ps")
-plt.grid()
-plt.legend()
-plt.show()
+# for i in [0,1,2]:
+#     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+#     plt.plot(ts1[aaa[picked_inds]],chi_k[:,i],"-o",color= color_list[i],label="$MSM-\chi$_%d"%i)
+#     plt.xlabel("delaytime/ps")
+# plt.grid()
+# plt.legend()
+# plt.show()
 #%%
 # #dass
 DAS = pinv(chi_k).dot(centers)
