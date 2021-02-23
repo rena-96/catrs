@@ -49,6 +49,16 @@ def rebinding(M, nclus, pi="uniform"):
     S_c = chi.T.dot(np.diag(pi).dot(chi))/(chi.T.dot(np.ones(dim)))
     return(np.linalg.det(S_c))
     
+def rebinding_nmf(H_r, P_r, pi="uniform"):
+    """h_r=chi, so the stiffness matrix is given by 
+    h_r.T.pi.h_r/(h_r.T.pi.e)"""
+    if pi =="uniform":
+       
+       pi = np.full(dim, 1./dim)  
+    elif pi=="statdistr":
+        
+    dim = np.shape(H_r)[1]
+    S = H_r.T.dot(np.diag(pi).dot(H_r))/(H_r.T.dot(np.diag(pi).dot(np.ones(dim))))
     
         
     
