@@ -62,7 +62,7 @@ T_c = pinv(chi_k).dot(K.dot(chi_k))
 K_c = pinv(chi_k).dot(K.dot(chi_k))
 K_c1 = pinv(chi_k.T.dot(chi_k)).dot(chi_k.T.dot(K.dot(chi_k)))
 K_c2 = proj(K,nclus, pi="statdistr")
-reb = rebinding(K, nclus, pi="statdistr")
+#reb = rebinding(K, nclus, pi="statdistr")
 #%%
 #     print(np.sum(K_c[i], axis =1))
 K_c_hard =  chi_k_hard.T.dot(K.dot(chi_k_hard))
@@ -86,7 +86,7 @@ plt.show()
 
 #%%
 Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
-reb_q = rebinding(Infgen, nclus, pi="uniform")
+#reb_q = rebinding(Infgen, nclus, pi="uniform")
 Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
 #print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
 print("soft", 1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
@@ -177,3 +177,5 @@ plt.show()
 #%%
 check_commutator(K,nclus=5)
 #%%
+S_c = rebinding(K, nclus=nclus)
+print(pinv(chi_k.T.dot(np.ones((40,1)))))#dot(chi.T.dot(np.diag(pi).dot(chi))))

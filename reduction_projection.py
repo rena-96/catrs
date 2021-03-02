@@ -46,19 +46,19 @@ def rebinding(M, nclus, pi="uniform"):
     pi = get_pi(M, pi=pi)
     print(pi)
     chi = pcca.pcca(M, nclus)
-    S_c = chi.T.dot(np.diag(pi).dot(chi))/(chi.T.dot(np.ones(dim)))
-    return(np.linalg.det(S_c))
+    S_c = pinv(chi.T.dot(np.ones((dim,1)))).dot(chi.T.dot(np.diag(pi).dot(chi)))
+    return(S_c, np.linalg.det(S_c))
     
-def rebinding_nmf(H_r, P_r, pi="uniform"):
-    """h_r=chi, so the stiffness matrix is given by 
-    h_r.T.pi.h_r/(h_r.T.pi.e)"""
-    if pi =="uniform":
+# def rebinding_nmf(H_r, P_r, pi="uniform"):
+#     """h_r=chi, so the stiffness matrix is given by 
+#     h_r.T.pi.h_r/(h_r.T.pi.e)"""
+#     if pi =="uniform":
        
-       pi = np.full(dim, 1./dim)  
-    elif pi=="statdistr":
+#        pi = np.full(dim, 1./dim)  
+#     elif pi=="statdistr":
         
-    dim = np.shape(H_r)[1]
-    S = H_r.T.dot(np.diag(pi).dot(H_r))/(H_r.T.dot(np.diag(pi).dot(np.ones(dim))))
+#     dim = np.shape(H_r)[1]
+#     S = H_r.T.dot(np.diag(pi).dot(H_r))/(H_r.T.dot(np.diag(pi).dot(np.ones(dim))))
     
         
     
