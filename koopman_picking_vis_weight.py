@@ -57,11 +57,12 @@ plt.ylabel("cells")
 plt.colorbar()
 plt.show()
      #%%
-# S_c = chi_k.T.dot(chi_k)/(chi_k.T.dot())
-T_c = pinv(chi_k).dot(K.dot(chi_k))
 K_c = pinv(chi_k).dot(K.dot(chi_k))
 K_c1 = pinv(chi_k.T.dot(chi_k)).dot(chi_k.T.dot(K.dot(chi_k)))
 K_c2 = proj(K,nclus, pi="statdistr")
+S_c, detSc = rebinding(K, nclus=nclus)
+T_c = S_c.dot(K_c) 
+
 #reb = rebinding(K, nclus, pi="statdistr")
 #%%
 #     print(np.sum(K_c[i], axis =1))
@@ -75,21 +76,21 @@ for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 plt.show()
 #%%
-Infgen = Newton_N(K_tens[:3], 1, 0)
-eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
-chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
-plot_spectrum_strx(spectrum_1.T,wl, ts1)
-for i in range(len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
-# plt.savefig("pcca_nt_br_al_corr_vis.pdf")
-plt.show()
+# Infgen = Newton_N(K_tens[:3], 1, 0)
+# eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
+# chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
+# plot_spectrum_strx(spectrum_1.T,wl, ts1)
+# for i in range(len(picked_inds)):
+#     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
+# # plt.savefig("pcca_nt_br_al_corr_vis.pdf")
+# plt.show()
 
 #%%
-Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
-#reb_q = rebinding(Infgen, nclus, pi="uniform")
-Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
-#print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
-print("soft", 1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
+# Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
+# #reb_q = rebinding(Infgen, nclus, pi="uniform")
+# Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
+# #print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
+# print("soft", 1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
 labels = ["A","B","C","D","E", "F","G"]
 for i in range(chi_k.shape[1]):
@@ -177,5 +178,3 @@ plt.show()
 #%%
 check_commutator(K,nclus=5)
 #%%
-S_c = rebinding(K, nclus=nclus)
-print(pinv(chi_k.T.dot(np.ones((40,1)))))#dot(chi.T.dot(np.diag(pi).dot(chi))))

@@ -46,7 +46,11 @@ def rebinding(M, nclus, pi="uniform"):
     pi = get_pi(M, pi=pi)
     print(pi)
     chi = pcca.pcca(M, nclus)
-    S_c = pinv(chi.T.dot(np.ones((dim,1)))).dot(chi.T.dot(np.diag(pi).dot(chi)))
+    num = chi.T.dot(M.dot(np.diag(pi).dot(chi)))
+    den = chi.T.dot(np.diag(pi).dot(np.ones((dim,1))))
+    den = den*np.eye(nclus)
+    print(num.shape, den.shape)
+    S_c = pinv(den).dot(num)
     return(S_c, np.linalg.det(S_c))
     
 # def rebinding_nmf(H_r, P_r, pi="uniform"):

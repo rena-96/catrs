@@ -12,12 +12,14 @@ import os
 from scipy.linalg import svd, pinv, logm
 from sklearn.cluster import KMeans
 import cmdtools
-from tools import voronoi_koopman_picking, plot_spectrum_strx, stroboscopic_inds
+from tools import  plot_spectrum_strx, stroboscopic_inds
 import cmdtools.estimation.voronoi as voronoi
 from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
 from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
+
+from reduction_projection import proj, rebinding
 #%%
 
 data_1 = np.loadtxt("matrix_2.dat")
@@ -68,7 +70,11 @@ plt.show()
 plt.imshow(chi_k, aspect="auto")
 plt.show()
      #%%
-K_c =  pinv(chi_k).dot(K.dot(chi_k))#/ (pinv(chi_k).dot(chi_k)))
+K_c = pinv(chi_k).dot(K.dot(chi_k))
+K_c1 = pinv(chi_k.T.dot(chi_k)).dot(chi_k.T.dot(K.dot(chi_k)))
+K_c2 = proj(K,nclus, pi="statdistr")
+S_c, detSc = rebinding(K, nclus=nclus)
+T_c = S_c.dot(K_c) 
 #     print(np.sum(K_c[i], axis =1))
 plt.imshow(K_c)
 plt.colorbar()
@@ -112,9 +118,10 @@ plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,
 plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
         
 plt.colorbar()
+plt.show()
 #%%
 for i in [0,1,2]:
-    plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
     plt.plot(aaa[picked_inds],chi_k[:,i],"-o",label="$MSM-\chi$_%d"%i)
     plt.xlabel("delaytime/ps")
 plt.grid()

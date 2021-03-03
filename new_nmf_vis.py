@@ -8,8 +8,9 @@ Created on Fri Jun 26 14:36:57 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from method_nmf import nmf
-from scipy.linalg import logm 
-from tools import norm_rows
+
+from scipy.linalg import logm, pinv
+#from tools import norm_rows
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt('br_py2_exec400.txt')
@@ -100,3 +101,11 @@ plt.show()
 
 diagp = np.diagonal(-1/logm(P_rec))
 #%%
+dim = 131
+pi = np.full(dim, 1./dim)
+num = Chi.T.dot(np.diag(pi).dot(Chi))
+den = Chi.T.dot(np.diag(pi).dot(np.ones((dim,1))))
+den = den*np.eye(nclus)
+print(num.shape, den.shape)
+S_c = pinv(den).dot(num)
+dett = np.linalg.det(S_c)
