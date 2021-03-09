@@ -77,8 +77,7 @@ for i in range(len(inds)-1):
 G = nx.from_numpy_matrix(np.matrix(count_mtx), create_using=nx.DiGraph)
 layout = nx.circular_layout(G)
 labels = nx.get_edge_attributes(G, "weight")
-print(labels
-      )
+print(l
 nx.draw(G, layout, connectionstyle="arc3,rad=0.2")
 nx.draw_networkx_edge_labels(G, pos=layout, edge_labels=labels)
 plt.show()

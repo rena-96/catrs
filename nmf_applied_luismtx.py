@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from method_nmf import nmf
 from scipy.linalg import logm 
-from tools import norm_rows
+# from tools import norm_rows
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt("matrix_2.dat").T
@@ -43,7 +43,7 @@ plt.ylabel("concentration")
 plt.subplot(1, 2, 2)
 plt.title("Plot $W_{rec}$")
 for i in range(len(Chi.T)):
-    plt.plot(W_rec.T[i], label=i)
+    plt.plot(W_rec.T[i], label="$\chi$_%d"%(i+1))
 plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
 #plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
@@ -52,24 +52,26 @@ plt.grid()
 #plt.xlim(400,100)
 plt.xlabel(r"$\nu/10^3$cm-1")
 plt.ylabel("$\Delta A$")
+plt.savefig("bothh_w,process2_3clus.pdf")
 plt.show()
 #%%
-plt.figure(figsize=(14,16))
+#plt.figure(figsize=(14,16))
 num = 321
 for i in range(len(Chi.T)):
 #    plt.figure(figsize=(10,4))
     
-    plt.subplot(num)
-    plt.plot(Chi.T[i], label=i)
+ #   plt.subplot(num)
+    plt.plot(Chi.T[i], label="$\chi$_%d"%(i+1))
     
   #  plt.xticks(np.arange(len(data[0,1:]), step=30),labels=np.round(data[0,1::30]))
     plt.grid()
     plt.legend()
-    plt.title("$\chi$_%d"%i)
+    plt.title("$\chi$")
 #    plt.xlim(400,80) #flip the data
     plt.xlabel("$t$/ps")
     plt.ylabel("value of the column vector")
     num+=1
+plt.savefig("chi_3clust_process2.pdf")
 plt.show()
     #%%
 #plt.figure(figsize=(10,4))

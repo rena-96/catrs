@@ -35,7 +35,7 @@ aaa = stroboscopic_inds(ts1)
 # K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
 #%%
 #infgen
-nclus = 4
+nclus = 2
 jumps = 10
 nstates = 50
 strobox = stroboscopic_inds(ts1)
@@ -101,13 +101,14 @@ Infgen_c = pinv(chi_infgen).dot(Infgen.dot(chi_infgen))
 print(1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
 for i in range(chi_k.shape[1]):
-    plt.plot(aaa[picked_inds],chi_k[:,i], "-o", label="$\chi$_%d"%i) 
+    plt.plot(aaa[picked_inds],chi_k[:,i], "-o", label="$\chi$_%d"%(i+1)) 
     plt.grid()
     plt.legend()
-    plt.title("$\chi$")
-    plt.ylabel("concentration")
+   # plt.title("$\chi$ vectors")
+    plt.ylabel("$\chi$ value (membership)")
     plt.xlabel("time/ps")
 #    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
+plt.savefig("process2_chi2_50.pdf")
 plt.show()
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
@@ -118,11 +119,14 @@ plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,
 plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
         
 plt.colorbar()
+plt.savefig("process2_spectrum.svg")
 plt.show()
 #%%
-for i in [0,1,2]:
-    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(aaa[picked_inds],chi_k[:,i],"-o",label="$MSM-\chi$_%d"%i)
-    plt.xlabel("delaytime/ps")
-plt.grid()
-plt.legend()
+# for i in [0,1,2]:
+#     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+#     plt.plot(aaa[picked_inds],chi_k[:,i],"-o",label="$MSM-\chi$_%d"%(i+1))
+#     plt.xlabel("delaytime/ps")
+#     plt.ylabel("\chi")
+# plt.grid()
+# plt.legend()
+# #plt.savefig(args, kwargs)
