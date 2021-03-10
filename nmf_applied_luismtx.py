@@ -29,11 +29,11 @@ M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus,
 
 #%%
 plt.figure(figsize=(15,4))
-plt.suptitle('NMF&PCCA+ analysis from 100ps, mech1', fontsize=16)
+plt.suptitle('MF with PCCA+, sequential 2-species decay', fontsize=16)
 plt.subplot(1, 2, 1)
 plt.title("Plot $H_{rec}$")
 for i in range(len(Chi.T)):
-    plt.plot(H_rec[i], label=i)
+    plt.plot(H_rec[i], label=(i+1))
     #plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
 plt.grid()
 plt.legend()
@@ -43,7 +43,7 @@ plt.ylabel("concentration")
 plt.subplot(1, 2, 2)
 plt.title("Plot $W_{rec}$")
 for i in range(len(Chi.T)):
-    plt.plot(W_rec.T[i], label="$\chi$_%d"%(i+1))
+    plt.plot(W_rec.T[i], label="compound_%d"%(i+1))
 plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
 #plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
@@ -52,7 +52,7 @@ plt.grid()
 #plt.xlim(400,100)
 plt.xlabel(r"$\nu/10^3$cm-1")
 plt.ylabel("$\Delta A$")
-plt.savefig("bothh_w,process2_3clus.pdf")
+#plt.savefig("bothh_w,process2_3clus.pdf")
 plt.show()
 #%%
 #plt.figure(figsize=(14,16))

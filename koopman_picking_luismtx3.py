@@ -25,7 +25,7 @@ from reduction_projection import proj, rebinding
 data_1 = np.loadtxt("matrix_2.dat")
 # data_2 = np.loadtxt("matrix_2.dat")
 # data_3 = np.loadtxt("matrix_3.dat")
-#data = np.loadtxt('iso_br_al_cor_py2_420nm_ex_ir.txt')
+#data_1 = np.loadtxt('iso_br_al_cor_py2_420nm_ex_ir')
 #%%
 spectrum_1 = data_1[1:, 50:]
 ts1 = data_1[0,50:]
@@ -35,7 +35,7 @@ aaa = stroboscopic_inds(ts1)
 # K, spectrum_new, picked_inds = voronoi_koopman_picking(spectrum_1.T,20,timeseries=data_1[0,102:],dt=1)
 #%%
 #infgen
-nclus = 2
+nclus = 3
 jumps = 10
 nstates = 50
 strobox = stroboscopic_inds(ts1)
@@ -64,6 +64,9 @@ print(eig_k)
 chi_k = cmdtools.analysis.pcca.pcca(K,nclus)
 
 plt.imshow(K)
+plt.colorbar()
+plt.xticks([])
+plt.yticks([])
 plt.show()
 plt.plot(eig_k, "-o")
 plt.show()
@@ -79,7 +82,7 @@ T_c = S_c.dot(K_c)
 plt.imshow(K_c)
 plt.colorbar()
 #     #%%
-color_list = ["g", "ivory", "deepskyblue", "fuchsia", "gold","darkgreen","coral"]
+color_list = ["g",  "deepskyblue", "fuchsia", "gold","ivory","darkgreen","coral"]
 plot_spectrum_strx(spectrum_1.T,data_1[1:,0], ts1)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
@@ -108,10 +111,10 @@ for i in range(chi_k.shape[1]):
     plt.ylabel("$\chi$ value (membership)")
     plt.xlabel("time/ps")
 #    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
-plt.savefig("process2_chi2_50.pdf")
+#plt.savefig("process2_chi2_50.pdf")
 plt.show()
 #%%
-plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
+plt.imshow(spectrum_infgen, cmap="winter", aspect="auto")
 plt.xlabel(r"$\nu/10^3$cm-1")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,0]/1000))
@@ -119,7 +122,7 @@ plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,
 plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
         
 plt.colorbar()
-plt.savefig("process2_spectrum.svg")
+#plt.savefig("process2_spectrum.svg")
 plt.show()
 #%%
 # for i in [0,1,2]:
@@ -130,3 +133,44 @@ plt.show()
 # plt.grid()
 # plt.legend()
 # #plt.savefig(args, kwargs)
+DAS = pinv(chi_k).dot(centers)
+plt.figure(figsize=(18,6))
+plt.suptitle("Membership functions $\chi$ and species \n-product ansatz")
+plt.subplot(1,2,1)
+
+
+labels = ["A","B","C","D","E", "F","G"]
+for i in range(chi_k.shape[1]):
+    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", label=labels[i])#"$\chi$_%d"%i) 
+    
+    plt.legend()
+    plt.title(r"$\chi$ of $K(\tau)$")
+    plt.ylabel("$\chi$ value (membership)")
+    plt.xlabel("time/ps")
+    
+plt.grid()  
+plt.xscale("linear")
+
+plt.subplot(1,2,2)  
+#plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
+for i in range(chi_k.shape[1]):
+    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    plt.plot(data_1[95:,0],DAS[i,94:],"-.",label="$MSM-S$_%s"%labels[i])
+    plt.xlabel("wavelength $\lambda$/nm")
+    plt.title("Species")
+plt.grid()
+plt.legend()
+#plt.savefig("seq3clustmsm.pdf")
+
+plt.show()
+#%%
+for i in [50,280]:
+    plt.plot(wl,spectrum_infgen[i,:], "-", label="$\chi$_%d"%(i+1)) 
+    plt.grid()
+    plt.legend()
+   # plt.title("$\chi$ vectors")
+    plt.ylabel("$\chi$ value (membership)")
+    plt.xlabel("time/ps")
+#    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
+#plt.savefig("process2_chi2_50.pdf")
+plt.show()

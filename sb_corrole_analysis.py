@@ -65,9 +65,9 @@ K_c =  pinv(chi_k).dot(K.dot(chi_k))#/ (pinv(chi_k).dot(chi_k)))
 #     #%%
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 plot_spectrum_strx(spectrum_1,wl, ts, step_=150)
-for i in range(len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
-plt.show()
+#for i in range(len(picked_inds)):
+ #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+#plt.show()
 #%%
 K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))
 #%%
