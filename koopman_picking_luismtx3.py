@@ -114,15 +114,15 @@ for i in range(chi_k.shape[1]):
 #plt.savefig("process2_chi2_50.pdf")
 plt.show()
 #%%
-plt.imshow(spectrum_infgen, cmap="winter", aspect="auto")
+plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
 plt.xlabel(r"$\nu/10^3$cm-1")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,0]/1000))
         #start with zero but remember to take it off from the lambdas in the data
-plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
+plt.yticks(np.arange(len(aaa), step=999),labels=np.round(aaa[::999],2))
         
 plt.colorbar()
-#plt.savefig("process2_spectrum.svg")
+plt.savefig("process2_spectrum.svg")
 plt.show()
 #%%
 # for i in [0,1,2]:
