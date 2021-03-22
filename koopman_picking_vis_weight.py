@@ -31,9 +31,9 @@ aaa = stroboscopic_inds(ts1)
 wl = data_1[1:,0]
 #%%
 #infgen
-nclus = 4
+nclus = 5
 jumps = 2
-nstates = 40
+nstates = 30
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=nstates, picked_weights=True)
 
 #%%
@@ -108,9 +108,9 @@ plt.xscale("linear")
 plt.show()
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
-plt.xlabel(r"$\nu/10^3$cm-1")
+plt.xlabel(r"$\lambda$/nm")
 plt.ylabel("delay time [ps]")
-plt.xticks(np.arange(len(wl), step=150),labels=np.round(data_1[1::150,0]/1000))
+plt.xticks(np.arange(len(wl), step=60),labels=np.round(data_1[1::60,0]))
         #start with zero but remember to take it off from the lambdas in the data
 plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
         
@@ -178,3 +178,16 @@ plt.show()
 #%%
 check_commutator(K,nclus=5)
 #%%
+#ts_new = ts[strobox]
+#step_ = int(len(ts_new)/10)
+plt.figure(figsize=(7,6))
+plt.imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
+plt.colorbar()
+plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
+plt.xlabel("$\lambda$ [nm]")
+plt.ylabel("delay time [ps]")
+plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
+for i in range(len(picked_inds)):
+    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+#start with zero but remember to take it off from the lambdas in the data
+plt.yticks([50,100,150,200,250])

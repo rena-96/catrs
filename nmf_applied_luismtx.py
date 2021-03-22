@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from method_nmf import nmf
 from scipy.linalg import logm 
-# from tools import norm_rows
+from reduction_projection import rebinding_nmf
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt("matrix_2.dat").T
@@ -21,7 +21,7 @@ wavelengths = data[0,1:]
 #    spectrum[i,:]-=spectrum[95,:]
 nclus = 3
 # parameters = [0, -100., 100., 1., 10.]
-parameters = [0., 100, 10, 1, 10]
+parameters = [0., 100, 10, 1, 50]
 #M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 4, 0, parameters, weight=True) 
 
 M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus, params=parameters, weight=False) 
@@ -29,21 +29,22 @@ M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus,
 
 #%%
 plt.figure(figsize=(15,4))
-plt.suptitle('MF with PCCA+, sequential 2-species decay', fontsize=16)
+plt.suptitle('MF with PCCA+ analysis', fontsize=16)
+labels= ["A","B","0"]
 plt.subplot(1, 2, 1)
-plt.title("Plot $H_{rec}$")
+plt.title("Plot $H$")
 for i in range(len(Chi.T)):
-    plt.plot(H_rec[i], label=(i+1))
+    plt.plot(H_rec[i], label=labels[i])
     #plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
 plt.grid()
 plt.legend()
 #plt.xlim(400,100) #flip the data
 plt.xlabel("t[ps]")#"$\lambda$/nm")
-plt.ylabel("concentration")
+plt.ylabel("concentration proportion")
 plt.subplot(1, 2, 2)
-plt.title("Plot $W_{rec}$")
+plt.title("Plot $W$")
 for i in range(len(Chi.T)):
-    plt.plot(W_rec.T[i], label="compound_%d"%(i+1))
+    plt.plot(W_rec.T[i], label="compound_%s"%labels[i])
 plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
 #plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
@@ -71,29 +72,11 @@ for i in range(len(Chi.T)):
     plt.xlabel("$t$/ps")
     plt.ylabel("value of the column vector")
     num+=1
-plt.savefig("chi_3clust_process2.pdf")
+#plt.savefig("chi_3clust_process2.pdf")
 plt.show()
     #%%
-#plt.figure(figsize=(10,4))
-#for i in [0,1,2,3,4]:
-#   
-#    plt.plot(H_rec[i], label=i)
-#    #plt.xticks(np.arange(len(data[0,1:]), step=20),labels=np.round(data[0,1::20]))
-#plt.title("$\chi$,analysis from 250 fs")
-##plt.legend()
-##plt.xlim(400,80) #flip the data
-#plt.xlabel("$\lambda$/nm")
-#plt.ylabel("value of the column vector")
-#plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
-#plt.legend()
-#plt.grid()
-##plt.xlim(400,100)
-#plt.xlabel("t/ps")
-#
-#plt.show()
-#%%
-# for i in range(len(Chi.T)):
-#     plt.plot(abs(H_rec[i]))
+S_mf, detSmf = rebinding_nmf(H_rec.T)
+
 #%%
 #from scipy.optimize import curve_fit
 ##plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")

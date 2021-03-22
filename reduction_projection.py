@@ -44,25 +44,33 @@ def rebinding(M, nclus, pi="uniform"):
     """Rebinding, paper marcus and max 12-13"""
     dim = np.shape(M)[0]
     pi = get_pi(M, pi=pi)
-    print(pi)
+    #print(pi)
     chi = pcca.pcca(M, nclus)
     num = chi.T.dot(np.diag(pi).dot(chi))
     den = chi.T.dot(np.diag(pi).dot(np.ones((dim,1))))
     den = den*np.eye(nclus)
-    print(num.shape, den.shape)
+   # print(num.shape, den.shape)
     S_c = pinv(den).dot(num)
     return(S_c, np.linalg.det(S_c))
     
-# def rebinding_nmf(H_r, P_r, pi="uniform"):
-#     """h_r=chi, so the stiffness matrix is given by 
-#     h_r.T.pi.h_r/(h_r.T.pi.e)"""
-#     if pi =="uniform":
+def rebinding_nmf(H_r):#, pi="uniform"):
+    """h_r=chi, so the stiffness matrix is given by 
+    h_r.T.pi.h_r/(h_r.T.pi.e),
+    TODO: stiffness with initial distribution"""
+    # if pi =="uniform":
        
-#        pi = np.full(dim, 1./dim)  
-#     elif pi=="statdistr":
-        
-#     dim = np.shape(H_r)[1]
-#     S = H_r.T.dot(np.diag(pi).dot(H_r))/(H_r.T.dot(np.diag(pi).dot(np.ones(dim))))
-    
+    #     pi = np.full(dim, 1./dim)  
+    # elif pi=="statdistr":
+      
+    rank = H_r.shape[1] 
+    dim = H_r.shape[0]
+    pi = np.full(dim, 1./dim)   
+    print(rank, dim)
+    num = H_r.T.dot(np.diag(pi).dot(H_r))
+    den = H_r.T.dot(np.diag(pi).dot(np.ones((dim,1))))
+    den = den*np.eye(rank)
+    print(num.shape, den.shape)
+    S_c = pinv(den).dot(num)
+    return(S_c, np.linalg.det(S_c))
         
     

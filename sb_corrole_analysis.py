@@ -64,7 +64,7 @@ K_c =  pinv(chi_k).dot(K.dot(chi_k))#/ (pinv(chi_k).dot(chi_k)))
 
 #     #%%
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
-plot_spectrum_strx(spectrum_1,wl, ts, step_=150)
+plot_spectrum_strx(spectrum_1,wl, ts, step_=1000)
 #for i in range(len(picked_inds)):
  #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 #plt.show()
@@ -152,3 +152,15 @@ plt.show()
 # plt.show()
 #%%
 check_commutator(K,nclus=5)
+#%%
+plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
+plt.xlabel(r"$\lambda/$nm")
+plt.ylabel("delay time [ps]")
+plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
+#plt.xticks(np.arange(wl[0],wl[-1], step=-120))
+        #start with zero but remember to take it off from the lambdas in the data
+plt.yticks([0,50,100,150,200,250])
+        
+plt.colorbar()
+plt.savefig("sb_spectrum.svg")
+plt.show()

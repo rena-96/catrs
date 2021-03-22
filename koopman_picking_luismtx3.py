@@ -119,8 +119,8 @@ plt.xlabel(r"$\nu/10^3$cm-1")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,0]/1000))
         #start with zero but remember to take it off from the lambdas in the data
-plt.yticks(np.arange(len(aaa), step=999),labels=np.round(aaa[::999],2))
-        
+plt.yticks([1000,3000,5000,7000,9000])
+plt.title("Simulated spectrum")   
 plt.colorbar()
 plt.savefig("process2_spectrum.svg")
 plt.show()
@@ -139,7 +139,7 @@ plt.suptitle("Membership functions $\chi$ and species \n-product ansatz")
 plt.subplot(1,2,1)
 
 
-labels = ["A","B","C","D","E", "F","G"]
+labels = ["0","B","A","C","D","E", "F","G"]
 for i in range(chi_k.shape[1]):
     plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", label=labels[i])#"$\chi$_%d"%i) 
     
@@ -155,22 +155,22 @@ plt.subplot(1,2,2)
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(data_1[95:,0],DAS[i,94:],"-.",label="$MSM-S$_%s"%labels[i])
-    plt.xlabel("wavelength $\lambda$/nm")
-    plt.title("Species")
+    plt.plot(data_1[95:,0]*0.001,DAS[i,94:],"-.",label="$MSM-S$_%s"%labels[i])
+    plt.xlabel(r" $\nu/10^3$cm-1")
+    plt.title("Compounds Amplitudes")
 plt.grid()
 plt.legend()
 #plt.savefig("seq3clustmsm.pdf")
 
 plt.show()
 #%%
-for i in [50,280]:
-    plt.plot(wl,spectrum_infgen[i,:], "-", label="$\chi$_%d"%(i+1)) 
-    plt.grid()
-    plt.legend()
-   # plt.title("$\chi$ vectors")
-    plt.ylabel("$\chi$ value (membership)")
-    plt.xlabel("time/ps")
-#    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
-#plt.savefig("process2_chi2_50.pdf")
-plt.show()
+# for i in [50,280]:
+#     plt.plot(wl,spectrum_infgen[i,:], "-", label="$\chi$_%d"%(i+1)) 
+#     plt.grid()
+#     plt.legend()
+#    # plt.title("$\chi$ vectors")
+#     plt.ylabel("$\chi$ value (membership)")
+#     plt.xlabel("time/ps")
+# #    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
+# #plt.savefig("process2_chi2_50.pdf")
+# plt.show()
