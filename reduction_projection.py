@@ -66,11 +66,12 @@ def rebinding_nmf(H_r):#, pi="uniform"):
     dim = H_r.shape[0]
     pi = np.full(dim, 1./dim)   
     print(rank, dim)
-    num = H_r.T.dot(np.diag(pi).dot(H_r))
-    den = H_r.T.dot(np.diag(pi).dot(np.ones((dim,1))))
+    #num = H_r.T.dot(np.diag(pi).dot(H_r))
+   # den = H_r.T.dot(np.diag(pi).dot(np.ones((dim,1))))
+    S_c = H_r.T.dot(H_r)
     den = den*np.eye(rank)
     print(num.shape, den.shape)
     S_c = pinv(den).dot(num)
-    return(S_c, np.linalg.det(S_c))
+    return(S_c, np.linalg.det(S_c), )
         
     
