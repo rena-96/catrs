@@ -15,8 +15,8 @@ from scipy.linalg import logm, pinv
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt('br_py2_exec400.txt')
 #%%
-spectrum = data[50:,1:]#before was 102 for the time
-times = data[50:, 0]
+spectrum = data[45:,1:]#before was 102 for the time
+times = data[45:, 0]
 aaa = stroboscopic_inds(times)
 spectrum = spectrum[aaa,:]
 wavelengths = data[0,1:]
@@ -24,7 +24,7 @@ wavelengths = data[0,1:]
 #    spectrum[i,:]-=spectrum[95,:]
 nclus = 5
 # parameters = [0, -100., 100., 1., 10.]
-parameters = [0., 100., 1000., 1, 10.]
+parameters = [0., 100., 1000., 10, 10.]
 #M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 4, 0, parameters, weight=True) 
 
 M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus, params=parameters, weight=False) 
@@ -32,11 +32,12 @@ M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus,
 
 #%%
 plt.figure(figsize=(15,4))
-plt.suptitle('NMF&PCCA+ analysis from 100ps, mech1', fontsize=16)
+labels = ["A","B","C","D","E", "F","G"]
+plt.suptitle('MF&PCCA+ analysis from 100ps, br. Al-corrole', fontsize=16)
 plt.subplot(1, 2, 1)
 plt.title("Plot $H_{rec}$")
-for i in range(5):
-    plt.plot(times[aaa],H_rec[i],"-o", label=i)
+for i in range(nclus):
+    plt.plot(times[aaa],H_rec[i],"-", label=labels[i])
     #plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
 plt.grid()
 plt.legend()
@@ -45,8 +46,9 @@ plt.xlabel("t[ps]")#"$\lambda$/nm")
 plt.ylabel("concentration")
 plt.subplot(1, 2, 2)
 plt.title("Plot $W_{rec}$")
-for i in range(5):
+for i in range(nclus):
     plt.plot(wavelengths,W_rec.T[i], label=i)
+plt.xlim(430,800)
 #plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
 #plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
