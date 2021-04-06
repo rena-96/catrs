@@ -33,7 +33,7 @@ wl = data_1[1:,0]
 #infgen
 nclus = 5
 jumps = 2
-nstates = 30
+nstates = 50
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=nstates, picked_weights=True)
 
 #%%
@@ -137,19 +137,20 @@ plt.grid()
 plt.legend()
 plt.show()
 #%%
+
+labels = ["A","B","C","D","E", "F","G"]
 plt.figure(figsize=(18,6))
 plt.suptitle("$\chi$ and species \n-product ansatz")
 plt.subplot(1,2,1)
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
+    plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%s"%labels[i])
     plt.xlabel("wavelength $\lambda$/nm")
-    plt.title("Species")
+    plt.title("Compounds amplitudes")
 plt.grid()
 plt.legend()
 plt.subplot(1,2,2)
 
-labels = ["A","B","C","D","E", "F","G"]
 for i in range(chi_k.shape[1]):
     plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
@@ -187,7 +188,7 @@ plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
 plt.xlabel("$\lambda$ [nm]")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
-for i in range(len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+#for i in range(len(picked_inds)):
+ #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 #start with zero but remember to take it off from the lambdas in the data
 plt.yticks([50,100,150,200,250])
