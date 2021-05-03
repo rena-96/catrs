@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from method_nmf import nmf
 from scipy.linalg import logm 
 from reduction_projection import rebinding_nmf
-
+from infgen_4ways import infgen_4ways
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt("matrix_2.dat").T
@@ -22,7 +22,7 @@ wavelengths = data[0,1:]
 #    spectrum[i,:]-=spectrum[95,:]
 nclus = 3
 # parameters = [0, -100., 100., 1., 10.]
-parameters = [0., 100, 10, 1, 50]
+parameters = [0., 100, 10, 1, 10]
 #M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 4, 0, parameters, weight=True) 
 
 M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus, params=parameters, weight=False) 
@@ -76,12 +76,9 @@ for i in range(len(Chi.T)):
 #plt.savefig("chi_3clust_process2.pdf")
 plt.show()
     #%%
-S_mf, detSmf = rebinding_nmf(H_rec.T)
-
-#%%
-#from scipy.optimize import curve_fit
-##plt.plot(((-data[41:-1,0]+data[42:,0])),"-o")
-#
-#fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[50:,2],  data[94:,0])
-
-diagp = np.diagonal(-1/logm(P_rec))
+#infgen 
+K_tensor = np.zeros((2,3,3))
+#K_tensor[0,:,:] = (H_rec.dot(H_rec.T))/ (H_rec.dot(H_rec.T)).sum(axis=1)[:, None]
+K_tensor[0,:,:] = np.eye(3)
+K_tensor[1,:,:] = P_rec
+infgen = infgen_4ways(H_rec,K_tensor )

@@ -18,7 +18,7 @@ from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
 from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
-
+from infgen_4ways import infgen_4ways
 from reduction_projection import proj, rebinding
 #%%
 
@@ -122,7 +122,7 @@ plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,
 plt.yticks([1000,3000,5000,7000,9000])
 plt.title("Simulated spectrum")   
 plt.colorbar()
-plt.savefig("process2_spectrum.svg")
+#plt.savefig("process2_spectrum.svg")
 plt.show()
 #%%
 # for i in [0,1,2]:
@@ -174,3 +174,4 @@ plt.show()
 # #    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
 # #plt.savefig("process2_chi2_50.pdf")
 # plt.show()
+infgen = infgen_4ways()
