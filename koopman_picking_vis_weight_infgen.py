@@ -25,7 +25,7 @@ from infgen_4ways import infgen_4ways
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 data_1 = np.loadtxt("br_py2_exec400.txt").T
-#%%#start 300 ps
+#%%#start 500 ps
 spectrum_1 = data_1[1:, 45:]
 ts1 = data_1[0,45:]
 aaa = stroboscopic_inds(ts1)
@@ -33,9 +33,9 @@ wl = data_1[1:,0]
 #%%
 #infgen
 nclus = 5
-jumps = 2
-nstates = 20
-spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=nstates, picked_weights=False)
+jumps = 3
+nstates = 50
+spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=nstates, jumps=jumps, picked_weights=True)
 
 #%%
 K = K_tens[1]
@@ -60,16 +60,11 @@ plt.show()
      #%%
 K_c = pinv(chi_k).dot(K.dot(chi_k))
 K_c1 = pinv(chi_k.T.dot(chi_k)).dot(chi_k.T.dot(K.dot(chi_k)))
-K_c2 = proj(K,nclus, pi="statdistr")
+K_c2 = proj(K,nclus, pi="uniform")
 S_c, detSc = rebinding(K, nclus=nclus)
 T_c = S_c.dot(K_c) 
 
-#reb = rebinding(K, nclus, pi="statdistr")
-#%%
-#     print(np.sum(K_c[i], axis =1))
-# K_c_hard =  chi_k_hard.T.dot(K.dot(chi_k_hard))
-# plt.imshow(K_c)
-# plt.colorbar()
+
 #%%
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 plot_spectrum_strx(spectrum_1.T,wl, ts1)
@@ -93,38 +88,7 @@ plt.show()
 # #print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
 # print("soft", 1/Infgen_c.diagonal(), 1/logm(K_c).diagonal(),1/(K_c-np.ones(K_c.shape[0])).diagonal())
 #%%
-labels = ["A","B","C","D","E", "F","G"]
-for i in range(chi_k.shape[1]):
-    plt.plot(ts1[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
-    
-    plt.legend()
-    plt.title(r"$\chi_{hard}$ of $K(\tau)$")
-    plt.ylabel("concentration")
-    plt.xlabel("time/ps")
-    
-plt.grid()  
-plt.xscale("linear")  
-#plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-plt.show()
-#%%
-plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
-plt.xlabel(r"$\lambda$/nm")
-plt.ylabel("delay time [ps]")
-plt.xticks(np.arange(len(wl), step=60),labels=np.round(data_1[1::60,0]))
-        #start with zero but remember to take it off from the lambdas in the data
-plt.yticks(np.arange(len(aaa), step=1000),labels=np.round(aaa[::1000],2))
-        
-plt.colorbar()
-plt.show()
-#%%
-# for i in [0,1,2]:
-#     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-#     plt.plot(ts1[aaa[picked_inds]],chi_k[:,i],"-o",color= color_list[i],label="$MSM-\chi$_%d"%i)
-#     plt.xlabel("delaytime/ps")
-# plt.grid()
-# plt.legend()
-# plt.show()
 #%%
 # #dass
 DAS = pinv(chi_k).dot(centers)
@@ -145,7 +109,7 @@ plt.suptitle("$\chi$ and species \n-product ansatz")
 plt.subplot(1,2,1)
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label="$MSM-S$_%s"%labels[i])
+    plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label=labels[i])
     plt.xlabel("wavelength $\lambda$/nm")
     plt.title("Compounds amplitudes")
 plt.grid()
@@ -164,7 +128,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-
+#plt.savefig("br-corrole-50vor-weighted.pdf")
 
 plt.show()
 #%%
@@ -180,20 +144,24 @@ plt.show()
 #%%
 check_commutator(K,nclus=5)
 #%%
-# #ts_new = ts[strobox]
-# #step_ = int(len(ts_new)/10)
-# plt.figure(figsize=(7,6))
-# plt.imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
-# plt.colorbar()
-# plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
-# plt.xlabel("$\lambda$ [nm]")
-# plt.ylabel("delay time [ps]")
-# plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
-# #for i in range(len(picked_inds)):
-#  #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
-# #start with zero but remember to take it off from the lambdas in the data
-# plt.yticks([50,100,150,200,250])
+#ts_new = ts[strobox]
+#step_ = int(len(ts_new)/10)
+plt.figure(figsize=(7,6))
+plt.imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
+plt.colorbar()
+plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
+plt.xlabel("$\lambda$ [nm]")
+plt.ylabel("delay time [ps]")
+plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
+#for i in range(len(picked_inds)):
+  #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+#start with zero but remember to take it off from the lambdas in the data
+plt.yticks([50,100,150,200,250])
 #%%
 #transform K tens with pcca+
-
-infgen = infgen_4ways(chi_k,K_tens[:4] )
+K_pcca = np.zeros((jumps,nclus,nclus))
+for i in range(jumps):
+    
+    K_pcca[i] = proj(K_tens[i],nclus, pi="uniform")
+    
+infgen = infgen_4ways(chi_k,K_pcca[:4] )
