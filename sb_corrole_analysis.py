@@ -194,5 +194,5 @@ check_commutator(K,nclus=5)
 #%%
 #memory 
 
-_ , detSc = rebinding(K, nclus=nclus)
+Sc , detSc = rebinding(K, nclus=nclus)
 _ , detSc_hard = rebinding(K, nclus=nclus, hard=True )
