@@ -32,15 +32,15 @@ ts = file["t"]
 spectrum_1 = np.nanmean(data_1, axis=2)
 #start analysis at 300 fs and 300 ps  and  400-700 nm circa
 ts = ts[46:320]*0.001
-wl = wl[510:1500]
-spectrum_1 = spectrum_1[46:320,510:1500]
+wl = wl[500:1448]
+spectrum_1 = spectrum_1[46:320,500:1448]
 aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
-nclus = 5
+nclus = 7
 jumps = 5
-nstates = 40
+nstates = 50
 
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl, picked_weights=True)
 #%%
@@ -107,7 +107,7 @@ K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
 # Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
 # print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
 #%%
-labels = ["A","B","C","D","E"]
+labels = ["A","B","C","D","E", "F", "G", "H´"]
 for i in range(chi_k.shape[1]):
     plt.plot(ts[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
