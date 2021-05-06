@@ -25,10 +25,10 @@ ts = ts[46:320]*0.001
 wl = wl[500:1448]
 spectrum = spectrum[46:320,500:1448]
 
-nclus = 5
+nclus =6
 # parameters = [0, -100., 100., 1., 10.]
-parameters = [0., 100, 10, 1, 50]
-#M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum,wavelengths, 4, 0, parameters, weight=True) 
+parameters = [0., 100, 10, 0, 0]
+
 
 M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus, params=parameters, weight=False) 
 
@@ -36,12 +36,13 @@ M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus,
 #%%
 plt.figure(figsize=(15,4))
 plt.suptitle('MF with PCCA+ analysis', fontsize=16)
-labels= ["A","B","0"]
+labels= ["A","B","C", "D", "E", "F", "G"]
+color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 plt.subplot(1, 2, 1)
 plt.title("Plot $H$")
 for i in range(len(Chi.T)):
     plt.plot(H_rec[i], label=labels[i])
-    #plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
+    #plt.xticks(np.arange(len(wl), step=120))#,labels=(np.round(wl[/1000)))
 plt.grid()
 plt.legend()
 #plt.xlim(400,100) #flip the data
@@ -51,7 +52,7 @@ plt.subplot(1, 2, 2)
 plt.title("Plot $W$")
 for i in range(len(Chi.T)):
     plt.plot(W_rec.T[i], label="compound_%s"%labels[i])
-plt.xticks(np.arange(len(wavelengths), step=120),labels=(np.round(wavelengths[1::120]/1000)))
+plt.xticks(np.arange(len(wl), step=100),labels=(np.round(wl[1::100])))
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
 #plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
 plt.legend()
@@ -81,7 +82,7 @@ for i in range(len(Chi.T)):
 #plt.savefig("chi_3clust_process2.pdf")
 plt.show()
     #%%
-S_mf, detSmf = rebinding_nmf(H_rec.T)
+#S_mf, detSmf = rebinding_nmf(H_rec.T)
 
 #%%
 #from scipy.optimize import curve_fit
