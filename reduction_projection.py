@@ -40,12 +40,14 @@ def proj(M, nclus, pi="uniform"):
 # matrix = np.array([[0,1,0,0],[0.1,0.1,0.1,0.7],[0.,0.4,0.4,.2],[0.3,0.2,0.5,0.]])
 # distr = statdistr(matrix)
 # print(proj(matrix,3))
-def rebinding(M, nclus, pi="uniform"):
+def rebinding(M, nclus, pi="uniform", hard=False):
     """Rebinding, paper marcus and max 12-13"""
     dim = np.shape(M)[0]
     pi = get_pi(M, pi=pi)
     #print(pi)
     chi = pcca.pcca(M, nclus)
+    if hard==True:
+        chi = hard_chi(chi)
     num = chi.T.dot(np.diag(pi).dot(chi))
     den = chi.T.dot(np.diag(pi).dot(np.ones((dim,1))))
     den = den*np.eye(nclus)

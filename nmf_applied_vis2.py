@@ -9,7 +9,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from method_nmf import nmf
 from scipy.linalg import logm 
-from tools import norm_rows, plot_spectrum_strx
+from tools import  plot_spectrum_strx
 #%%
 data= np.loadtxt("br_py2_exec400.txt")
 #%%

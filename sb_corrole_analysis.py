@@ -20,7 +20,9 @@ from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 import networkx
 from check_commutator import check_commutator
+from reduction_projection import rebinding
 #%%
+
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 file = np.load("SB_corrole_400nm.npz")
@@ -38,7 +40,7 @@ aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
-nclus = 7
+nclus = 5
 jumps = 5
 nstates = 50
 
@@ -53,7 +55,7 @@ plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 plt.yticks([0,50,100,150,200,250])
         
 plt.colorbar()
-#plt.savefig("sb_spectrum.svg")
+#plt.savefig("sb_spectrum_250ps.svg")
 plt.show()
 #%%
 K = K_tens[1]
@@ -75,7 +77,7 @@ K_c =  pinv(chi_k).dot(K.dot(chi_k))
    #%%
 plt.figure(figsize=(13,12))
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
-plt.title("Sb-Corrole pump-probe specturm \n Assignment of dominant conformaiton from PCCA+ \n 30 Voronoi cells")
+plt.title("Sb-Corrole pump-probe specturm \n Assignment of dominant conformaiton from PCCA+ \n %d Voronoi cells"%nstates)
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
 plt.xlabel(r"$\lambda/$nm")
 plt.ylabel("delay time [ps]")
@@ -83,12 +85,12 @@ plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 
 #plt.xticks(np.arange(wl[0],wl[-1], step=-120))
         #start with zero but remember to take it off from the lambdas in the data
-plt.yticks([0,50,100,150,200,250])
+plt.yticks(np.arange(0,300, step=50))
         
 plt.colorbar()
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
-#plt.savefig("sb_corrole_chi_30vor.pdf")
+#plt.savefig("sb_corrole_chi_50vor_250ps.pdf")
 plt.show()
 #%%
 K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
@@ -143,7 +145,7 @@ plt.show()
 # plt.show()
 #%%
 # #dass
-DAS = pinv(chi_k).dot(centers)
+DAS = pinv(chi_k_hard).dot(centers)
 #%%
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
@@ -156,7 +158,7 @@ plt.show()
 #%%
 labels = ["A","B","C","D","E", "F","G"]
 plt.figure(figsize=(18,6))
-plt.suptitle("$\chi$ and species \n-product ansatz")
+plt.suptitle("$\chi_H$ and species \n-product ansatz")
 plt.subplot(1,2,1)
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
@@ -168,7 +170,7 @@ plt.legend()
 plt.subplot(1,2,2)
 
 for i in range(chi_k.shape[1]):
-    plt.plot(ts[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
+    plt.plot(ts[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
@@ -179,7 +181,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-plt.savefig("sb-corrole-30vor-weighted.pdf")
+#plt.savefig("sb-corrole-50vor-weighted-hard-transitions-250ps.pdf")
 
 plt.show()
 # plt.show()
@@ -190,3 +192,7 @@ plt.show()
 #%%
 check_commutator(K,nclus=5)
 #%%
+#memory 
+
+_ , detSc = rebinding(K, nclus=nclus)
+_ , detSc_hard = rebinding(K, nclus=nclus, hard=True )
