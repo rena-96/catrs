@@ -18,7 +18,7 @@ from cmdtools import utils
 from cmdtools.estimation.picking_algorithm import picking_algorithm
 from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
-from infgen_4ways import infgen_4ways
+from infgen_4ways import infgen_3ways
 from reduction_projection import proj, rebinding
 #%%
 
@@ -36,7 +36,7 @@ aaa = stroboscopic_inds(ts1)
 #%%
 #infgen
 nclus = 3
-jumps = 10
+jumps = 3
 nstates = 50
 strobox = stroboscopic_inds(ts1)
 
@@ -174,4 +174,12 @@ plt.show()
 # #    plt.xticks(ticks=np.arange(len(aaa), step=1000),labels=aaa[::1000])
 # #plt.savefig("process2_chi2_50.pdf")
 # plt.show()
-infgen = infgen_4ways()
+#transform K tens with pcca+
+K_pcca = np.zeros((jumps,nclus,nclus))
+for i in range(jumps):
+    
+    K_pcca[i] = proj(K_tens[i],nclus, pi="uniform")
+infgen = infgen_3ways(K_pcca)
+#%%
+lalala =  cmdtools.analysis.pcca.pcca(K-np.eye(50),nclus)
+lelele =  pinv(lalala).dot((K-np.eye(50)).dot(lalala))

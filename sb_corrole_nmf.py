@@ -25,7 +25,7 @@ ts = ts[46:320]*0.001
 wl = wl[500:1448]
 spectrum = spectrum[46:320,500:1448]
 
-nclus =6
+nclus = 5
 # parameters = [0, -100., 100., 1., 10.]
 parameters = [0., 100, 10, 0, 0]
 
@@ -51,16 +51,18 @@ plt.ylabel("concentration proportion")
 plt.subplot(1, 2, 2)
 plt.title("Plot $W$")
 for i in range(len(Chi.T)):
-    plt.plot(W_rec.T[i], label="compound_%s"%labels[i])
+    
+    plt.plot(W_rec.T[i], label=labels[i])
 plt.xticks(np.arange(len(wl), step=100),labels=(np.round(wl[1::100])))
+plt.xlim(948,0)
   #  plt.xticks(np.arange(len(data[0,1:]), step=50),labels=np.round(data[0,1::50],1))
 #plt.xticks(np.arange(len(data[44:,0]), step=15),labels=np.round(data[44::15,0],1))
 plt.legend()
 plt.grid()
 #plt.xlim(400,100)
-plt.xlabel(r"$\nu/10^3$cm-1")
+plt.xlabel(r"$\lambda$[nm]")
 plt.ylabel("$\Delta A$")
-#plt.savefig("bothh_w,process2_3clus.pdf")
+#plt.savefig("sb-corrole-nmf-5clus.pdf")
 plt.show()
 #%%
 #plt.figure(figsize=(14,16))
@@ -91,3 +93,11 @@ plt.show()
 #fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[50:,2],  data[94:,0])
 
 diagp = np.diagonal(-1/logm(P_rec))
+for i in range(6):
+    fig, ax = plt.subplots()
+    ax.plot(W_rec.T[i])
+    plt.xticks(np.arange(len(wl), step=100),labels=(np.round(wl[1::100])))
+    ax.invert_xaxis()
+    plt.ylim(-80,130)
+    plt.grid()
+    plt.show()
