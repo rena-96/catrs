@@ -33,16 +33,16 @@ ts = file["t"]
 #%%
 spectrum_1 = np.nanmean(data_1, axis=2)
 #start analysis at 300 fs and 300 ps  and  400-700 nm circa
-ts = ts[46:]*0.001
+ts = ts[46:250]*0.001
 wl = wl[500:1448]
-spectrum_1 = spectrum_1[46:,500:1448]
+spectrum_1 = spectrum_1[46:250,500:1448]
 aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
-nclus = 5
+nclus = 3
 jumps = 5
-nstates = 50
+nstates = 20
 
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl, picked_weights=True)
 #%%
@@ -52,7 +52,7 @@ plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 #plt.xticks(np.arange(wl[0],wl[-1], step=-120))
         #start with zero but remember to take it off from the lambdas in the data
-plt.yticks([0,50,100,150,200,250])
+plt.yticks([0,10,20,30,40,50])#,100,150,200,250])
         
 plt.colorbar()
 #plt.savefig("sb_spectrum_250ps.svg")
@@ -78,18 +78,18 @@ K_c =  pinv(chi_k).dot(K.dot(chi_k))
 plt.figure(figsize=(13,12))
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 plt.title("Sb-Corrole pump-probe specturm \n ex 400nm")#" \n Assignment of dominant conformaiton from PCCA+ \n %d Voronoi cells"%nstates)
-plt.contourf(spectrum_infgen, levels=25,cmap="coolwarm", aspect="auto")
+plt.imshow(spectrum_infgen,cmap="coolwarm", aspect="auto")
 plt.xlabel(r"$\lambda/$nm")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 
 #plt.xticks(np.arange(wl[0],wl[-1], step=-120))
         #start with zero but remember to take it off from the lambdas in the data
-plt.yticks(np.arange(1200,0, step=100))
-        
+#plt.yticks(np.arange(1200,0, step=-100))
+plt.yticks([0,10,20,30,40,50])       
 plt.colorbar()
-#for i in range(len(picked_inds)):
- #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+for i in range(len(picked_inds)):
+    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 #plt.savefig("sb_corrole_chi_50vor_250ps.pdf")
 plt.show()
 #%%

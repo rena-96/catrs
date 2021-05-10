@@ -21,11 +21,11 @@ ts = file["t"]
 #%%
 spectrum = np.nanmean(data_1, axis=2)
 #start analysis at 300 fs and 300 ps  and  400-700 nm circa
-ts = ts[46:320]*0.001
+ts = ts[46:]*0.001
 wl = wl[500:1448]
-spectrum = spectrum[46:320,500:1448]
+spectrum = spectrum[46:,500:1448]
 
-nclus = 5
+nclus = 6
 # parameters = [0, -100., 100., 1., 10.]
 parameters = [0., 100, 10, 0, 0]
 
@@ -93,11 +93,11 @@ plt.show()
 #fit = curve_fit(lambda t,a,b,c: a+b*np.exp(c*t),  W_rec[50:,2],  data[94:,0])
 
 diagp = np.diagonal(-1/logm(P_rec))
-for i in range(6):
+for i in range(len(Chi.T)):
     fig, ax = plt.subplots()
     ax.plot(W_rec.T[i])
     plt.xticks(np.arange(len(wl), step=100),labels=(np.round(wl[1::100])))
     ax.invert_xaxis()
-    plt.ylim(-80,130)
+    plt.ylim(np.amin(W_rec),np.amax(W_rec))
     plt.grid()
     plt.show()
