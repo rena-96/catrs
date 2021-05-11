@@ -25,7 +25,7 @@ ts = ts[46:]*0.001
 wl = wl[500:1448]
 spectrum = spectrum[46:,500:1448]
 
-nclus = 6
+nclus = 5
 # parameters = [0, -100., 100., 1., 10.]
 parameters = [0., 100, 10, 0, 0]
 
@@ -41,7 +41,7 @@ color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 plt.subplot(1, 2, 1)
 plt.title("Plot $H$")
 for i in range(len(Chi.T)):
-    plt.plot(H_rec[i], label=labels[i])
+    plt.scatter(ts,H_rec[i], marker='.', label=labels[i])
     #plt.xticks(np.arange(len(wl), step=120))#,labels=(np.round(wl[/1000)))
 plt.grid()
 plt.legend()

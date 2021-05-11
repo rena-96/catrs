@@ -33,18 +33,17 @@ ts = file["t"]
 #%%
 spectrum_1 = np.nanmean(data_1, axis=2)
 #start analysis at 300 fs and 300 ps  and  400-700 nm circa
-ts = ts[46:250]*0.001
+ts = ts[46:]*0.001
 wl = wl[500:1448]
-spectrum_1 = spectrum_1[46:250,500:1448]
+spectrum_1 = spectrum_1[46:,500:1448]
 aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
-nclus = 3
+nclus = 5
 jumps = 5
-nstates = 20
-
-spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl, picked_weights=True)
+nstates = 60
+spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl)#), picked_weights=True)
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
 plt.xlabel(r"$\lambda/$nm")
@@ -85,11 +84,11 @@ plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 
 #plt.xticks(np.arange(wl[0],wl[-1], step=-120))
         #start with zero but remember to take it off from the lambdas in the data
-#plt.yticks(np.arange(1200,0, step=-100))
-plt.yticks([0,10,20,30,40,50])       
+plt.yticks(np.arange(0,1200, step=50))
+#plt.yticks([0,10,20,30,40,50])       
 plt.colorbar()
-for i in range(len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+#for i in range(len(picked_inds)):
+ #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 #plt.savefig("sb_corrole_chi_50vor_250ps.pdf")
 plt.show()
 #%%
@@ -145,7 +144,7 @@ plt.show()
 # plt.show()
 #%%
 # #dass
-DAS = pinv(chi_k_hard).dot(centers)
+DAS = pinv(chi_k).dot(centers)
 #%%
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
@@ -158,7 +157,7 @@ plt.show()
 #%%
 labels = ["A","B","C","D","E", "F","G"]
 plt.figure(figsize=(18,6))
-plt.suptitle("$\chi_H$ and species \n-product ansatz")
+plt.suptitle("$\chi$ and species \n-product ansatz")
 plt.subplot(1,2,1)
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
@@ -170,7 +169,7 @@ plt.legend()
 plt.subplot(1,2,2)
 
 for i in range(chi_k.shape[1]):
-    plt.plot(ts[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
+    plt.plot(ts[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
