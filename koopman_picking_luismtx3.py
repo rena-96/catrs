@@ -122,7 +122,7 @@ plt.xticks(np.arange(len(data_1[1:,0]), step=150),labels=np.round(data_1[1::150,
 plt.yticks([1000,3000,5000,7000,9000])
 plt.title("Simulated spectrum")   
 plt.colorbar()
-#plt.savefig("process2_spectrum.svg")
+#plt.savefig("process2_spectrum.eps")
 plt.show()
 #%%
 # for i in [0,1,2]:

@@ -119,11 +119,11 @@ plt.subplot(1,2,2)
 for i in range(chi_k.shape[1]):
     plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
     
-    plt.legend()
+
     plt.title(r"$\chi$ of $K(\tau)$")
     plt.ylabel("concentration")
     plt.xlabel("time/ps")
-    
+plt.legend(ncol=5)
 plt.grid()  
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
@@ -134,9 +134,9 @@ plt.show()
 #%%
 # K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))
 # #     print(np.sum(K_c[i], axis =1))
-# plt.imshow(K_c_hard)
-# plt.colorbar()
-# plt.show()
+plt.imshow(K)
+plt.colorbar()
+plt.show()
 #%%
 # K_c_graph_soft = networkx.from_numpy_matrix(K_c)
 # networkx.draw(K_c_graph_soft, with_labels=True, font_weight='bold')
@@ -153,10 +153,12 @@ plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
 plt.xlabel("$\lambda$ [nm]")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
-#for i in range(len(picked_inds)):
-  #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+for i in range(len(picked_inds)):
+     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
 #start with zero but remember to take it off from the lambdas in the data
 plt.yticks([50,100,150,200,250])
+plt.legend()
+# plt.savefig("poster4.pdf")
 #%%
 #transform K tens with pcca+
 K_pcca = np.zeros((jumps,nclus,nclus))
@@ -165,3 +167,28 @@ for i in range(jumps):
     K_pcca[i] = proj(K_tens[i],nclus, pi="uniform")
     
 infgen = infgen_4ways(chi_k,K_pcca[:4] )
+%%
+# manyfigs, axs = plt.subplots(1,4)
+# #the spectrum
+# axs[0].imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
+# #plt.colorbar(ax=axs[0])
+# axs[0].set_title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
+# axs[0].set_xlabel("$\lambda$ [nm]")
+# axs[0].set_ylabel("delay time [ps]")
+# axs[0].set_xticks(np.arange(len(wl), step=60))#,label=np.round(wl[1::60]))
+# #for i in range(len(picked_inds)):
+#   #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+# #start with zero but remember to take it off from the lambdas in the data
+# axs[0].set_yticks([50,100,150,200,250])
+
+# # the spectrum w the VOronoi cells
+# axs[1].imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
+# #plt.colorbar()
+# axs[1].set_title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
+# axs[1].set_xlabel("$\lambda$ [nm]")
+# axs[1].set_ylabel("delay time [ps]")
+# axs[1].set_xticks(np.arange(len(wl), step=60),label=np.round(wl[1::60]))
+# # for i in range(len(picked_inds)):
+     # plt.axhline(y=picked_inds[i], color="black")
+#start with zero but remember to take it off from the lambdas in the data
+# axs[1].set_yticks([50,100,150,200,250])
