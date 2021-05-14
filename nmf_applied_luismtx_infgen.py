@@ -10,7 +10,7 @@ import matplotlib.pyplot as plt
 from method_nmf import nmf
 from scipy.linalg import logm 
 from reduction_projection import rebinding_nmf
-from infgen_4ways import infgen_4ways
+from infgen_4ways import infgen_3ways
 #%%
 #data = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt')
 data = np.loadtxt("matrix_2.dat").T
@@ -78,7 +78,8 @@ plt.show()
     #%%
 #infgen 
 K_tensor = np.zeros((2,3,3))
-#K_tensor[0,:,:] = (H_rec.dot(H_rec.T))/ (H_rec.dot(H_rec.T)).sum(axis=1)[:, None]
-K_tensor[0,:,:] = np.eye(3)
+K_tensor[0,:,:] = (H_rec.dot(H_rec.T))/ (H_rec.dot(H_rec.T)).sum(axis=1)[:, None]
+#K_tensor[0,:,:] = np.eye(3)
 K_tensor[1,:,:] = P_rec
-infgen = infgen_4ways(H_rec,K_tensor )
+#K_tensor[2,:,:] = 
+infgen = infgen_3ways(K_tensor )
