@@ -57,6 +57,7 @@ for j in range(jumps):
     K_tens[j] = utils.rowstochastic(K_tens[j])
 #%%
 K = K_tens[1]
+#np.savetxt("K_tutorial_50vor.txt", K)
 eig_k = np.sort(np.linalg.eigvals(K))
 eigvec_k = np.linalg.eig(K)[1]
 print(eig_k)
@@ -82,10 +83,11 @@ T_c = S_c.dot(K_c)
 plt.imshow(K_c)
 plt.colorbar()
 #     #%%
-color_list = ["g",  "deepskyblue", "fuchsia", "gold","ivory","darkgreen","coral"]
+color_list = ["g",  "deepskyblue", "magenta", "gold","ivory","darkgreen","coral"]
 plot_spectrum_strx(spectrum_1.T,data_1[1:,0], ts1)
 for i in range(len(picked_inds)):
     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+plt.title("")
 plt.show()
 #%%
 Infgen = Newton_N(K_tens[:4], 1, 0)
