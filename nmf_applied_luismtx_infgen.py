@@ -77,9 +77,11 @@ for i in range(len(Chi.T)):
 plt.show()
     #%%
 #infgen 
-K_tensor = np.zeros((2,3,3))
+K_tensor = np.zeros((5,3,3))
 K_tensor[0,:,:] = (H_rec.dot(H_rec.T))/ (H_rec.dot(H_rec.T)).sum(axis=1)[:, None]
 #K_tensor[0,:,:] = np.eye(3)
 K_tensor[1,:,:] = P_rec
-#K_tensor[2,:,:] = 
+K_tensor[2,:,:] = (H_rec[:,2:].dot(H_rec[:,:-2].T))/ (H_rec[:,2:].dot(H_rec[:,:-2].T)).sum(axis=1)[:, None]
+K_tensor[3,:,:] = (H_rec[:,3:].dot(H_rec[:,:-3].T))/ (H_rec[:,3:].dot(H_rec[:,:-3].T)).sum(axis=1)[:, None]
+K_tensor[4,:,:] = (H_rec[:,4:].dot(H_rec[:,:-4].T))/ (H_rec[:,4:].dot(H_rec[:,:-4].T)).sum(axis=1)[:, None]
 infgen = infgen_3ways(K_tensor )
