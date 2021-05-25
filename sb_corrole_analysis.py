@@ -75,7 +75,7 @@ K_c =  pinv(chi_k).dot(K.dot(chi_k))
 
    #%%
 plt.figure(figsize=(13,12))
-color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
+cmap_states = plt.get_cmap("tab10")
 plt.title("Sb-Corrole pump-probe specturm \n ex 400nm")#" \n Assignment of dominant conformaiton from PCCA+ \n %d Voronoi cells"%nstates)
 plt.imshow(spectrum_infgen,cmap="coolwarm", aspect="auto")
 plt.xlabel(r"$\lambda/$nm")
@@ -88,11 +88,11 @@ plt.yticks(np.arange(0,1200, step=50))
 #plt.yticks([0,10,20,30,40,50])       
 plt.colorbar()
 #for i in range(len(picked_inds)):
- #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+ #   plt.axhline(y=picked_inds[i], color=cmap_states(np.argmax((chi_k)[i,:])))
 #plt.savefig("sb_corrole_chi_50vor_250ps.pdf")
 plt.show()
 #%%
-K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
+# K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
 #%%
 # Infgen = Newton_N(K_tens[:3], 1, 0)
 # eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
@@ -110,7 +110,7 @@ K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
 #%%
 labels = ["A","B","C","D","E", "F", "G", "H´"]
 for i in range(chi_k.shape[1]):
-    plt.plot(ts[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
+    plt.plot(ts[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= cmap_states(i),label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
@@ -137,7 +137,7 @@ plt.show()
 #%%
 # for i in [0,1,2]:
 #     #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
-#     plt.plot(ts[aaa[picked_inds]],chi_k[:,i],"-o",color= color_list[i],label="$MSM-\chi$_%d"%i)
+#     plt.plot(ts[aaa[picked_inds]],chi_k[:,i],"-o", color= cmap_states(i),label="$MSM-\chi$_%d"%i)
 #     plt.xlabel("delaytime/ps")
 # plt.grid()
 # plt.legend()
@@ -149,7 +149,7 @@ DAS = pinv(chi_k).dot(centers)
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
     #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(wl,DAS[i,:],"-.",color= color_list[i],label="$MSM-S$_%d"%i)
+    plt.plot(wl,DAS[i,:],"-.",color=cmap_states(i),label="$MSM-S$_%d"%i)
     plt.xlabel("wavelength $\lambda$/nm")
 plt.grid()
 plt.legend()
@@ -158,18 +158,18 @@ plt.show()
 labels = ["A","B","C","D","E", "F","G"]
 plt.figure(figsize=(18,6))
 plt.suptitle("$\chi$ and species \n-product ansatz")
-plt.subplot(1,2,1)
+plt.subplot(1,2,2)
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(wl,DAS[i,:],"-.",color= color_list[i],label=labels[i])
+    plt.plot(wl,DAS[i,:],"-.",color= cmap_states(i),label=labels[i])
     plt.xlabel("wavelength $\lambda$/nm")
     plt.title("Compounds amplitudes")
 plt.grid()
 plt.legend()
-plt.subplot(1,2,2)
+plt.subplot(1,2,1)
 
 for i in range(chi_k.shape[1]):
-    plt.plot(ts[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
+    plt.plot(ts[aaa[picked_inds]],chi_k[:,i], "-o", color= cmap_states(i),label=labels[i])#"$\chi$_%d"%i) 
     
     plt.legend()
     plt.title(r"$\chi$ of $K(\tau)$")
