@@ -40,10 +40,10 @@ aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
-nclus = 5
+nclus = 4
 jumps = 5
 nstates = 60
-spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl)#), picked_weights=True)
+spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl, picked_weights=True)
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
 plt.xlabel(r"$\lambda/$nm")
@@ -87,16 +87,16 @@ plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 plt.yticks(np.arange(0,1200, step=50))
 #plt.yticks([0,10,20,30,40,50])       
 plt.colorbar()
-#for i in range(len(picked_inds)):
- #   plt.axhline(y=picked_inds[i], color=cmap_states(np.argmax((chi_k)[i,:])))
-#plt.savefig("sb_corrole_chi_50vor_250ps.pdf")
+for i in range(len(picked_inds)):
+    plt.axhline(y=picked_inds[i], color=cmap_states(np.argmax((chi_k)[i,:])))
+#lt.savefig("sb_corrole_chi_50vor_250ps.pdf")
 plt.show()
 #%%
 # K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))
 #%%
-# Infgen = Newton_N(K_tens[:3], 1, 0)
-# eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
-# chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
+#Infgen = Newton_N(K_tens[:3], 1, 0)
+#eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
+#chi_infgen = cmdtools.analysis.pcca.pcca(Infgen,nclus)
 # plot_spectrum_strx(spectrum_1,wl, ts)
 # for i in range(len(picked_inds)):
 #     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_infgen)[i,:])])
@@ -148,12 +148,13 @@ DAS = pinv(chi_k).dot(centers)
 #%%
 plt.figure(figsize=(12,7))
 for i in range(chi_k.shape[1]):
+    plt.figure(figsize=(12,7))
     #plt.plot(ts,Chi[:,i], label="$NMF-\chi$_%d"%i)
     plt.plot(wl,DAS[i,:],"-.",color=cmap_states(i),label="$MSM-S$_%d"%i)
     plt.xlabel("wavelength $\lambda$/nm")
-plt.grid()
-plt.legend()
-plt.show()
+    plt.grid()
+    plt.legend()
+    plt.show()
 #%%
 labels = ["A","B","C","D","E", "F","G"]
 plt.figure(figsize=(18,6))
@@ -163,6 +164,7 @@ for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
     plt.plot(wl,DAS[i,:],"-.",color= cmap_states(i),label=labels[i])
     plt.xlabel("wavelength $\lambda$/nm")
+    plt.ylabel("$\Delta A$")
     plt.title("Compounds amplitudes")
 plt.grid()
 plt.legend()
@@ -180,7 +182,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-#plt.savefig("sb-corrole-50vor-weighted-hard-transitions-250ps.pdf")
+#lt.savefig("sb-corrole-30vor-50ps.pdf")
 
 plt.show()
 # plt.show()
@@ -195,3 +197,29 @@ check_commutator(K,nclus=5)
 
 Sc , detSc = rebinding(K, nclus=nclus)
 _ , detSc_hard = rebinding(K, nclus=nclus, hard=True )
+#%%
+fast_picked = [ 0,  1,  2,  3,  4,  5,  7,  8, 10, 12, 16, 17, 19, 20, 22, 23, 24,
+       25, 30, 32, 33, 39, 44, 47, 49, 50, 51, 52, 53, 54]
+fast_chi = [0, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2,
+       2, 1, 1, 1, 1, 1, 1, 1]
+labels= ["A","B","C","D", "a","b", "c","d"]
+plt.figure(figsize=(13,12))
+cmap_states = plt.get_cmap("tab10")
+plt.title("Sb-Corrole pump-probe specturm \n ex 400nm")#" \n Assignment of dominant conformaiton from PCCA+ \n %d Voronoi cells"%nstates)
+plt.imshow(spectrum_infgen,cmap="coolwarm", aspect="auto")
+plt.xlabel(r"$\lambda/$nm")
+plt.ylabel("delay time [ps]")
+plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
+
+       #start with zero but remember to take it off from the lambdas in the data
+plt.yticks(np.arange(0,1200, step=50))
+#plt.yticks([0,10,20,30,40,50])       
+plt.colorbar()
+for i in range(23,len(picked_inds)):
+    plt.axhline(y=picked_inds[i], color=cmap_states(np.argmax((chi_k)[i,:])), label=labels[np.argmax((chi_k)[i,:])])
+for i in range(30):
+    plt.axhline(y=fast_picked[i], color=cmap_states(fast_chi[i]+3), label=labels[fast_chi[i]+3], lw=3)
+plt.yscale("log")        
+plt.legend()
+#lt.savefig("sb_corrole_chi_50vor_250ps.pdf")
+plt.show()
