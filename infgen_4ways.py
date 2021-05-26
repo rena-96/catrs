@@ -48,5 +48,5 @@ def infgen_3ways(K_tensor, tau=1):
     """Compute infgen in 3 ways. 
     K_tensor= tensor, it starts w K for tau=0"""
     return [logm_infgen(K_tensor, tau), fin_diff_infgen(K_tensor, tau), 
-            Newton_N(K_tensor, 1, 0)]
+            Newton_N(K_tensor, 1., 0)]
     

@@ -78,21 +78,26 @@ plt.show()
     #%%
 #infgen 
 list_no = []
-K_tensor = np.zeros((100,3,3))
+K_tensor = np.zeros((30,3,3))
 K_tensor[0,:,:] = (H_rec.dot(H_rec.T))/ (H_rec.dot(H_rec.T)).sum(axis=1)[:, None]
 #K_tensor[0,:,:] = np.eye(3)
 K_tensor[1,:,:] = P_rec
 #K_tensor[2,:,:] = (H_rec[:,2:].dot(H_rec[:,:-2].T))/ (H_rec[:,2:].dot(H_rec[:,:-2].T)).sum(axis=1)[:, None]
 #K_tensor[3,:,:] = (H_rec[:,3:].dot(H_rec[:,:-3].T))/ (H_rec[:,3:].dot(H_rec[:,:-3].T)).sum(axis=1)[:, None]
 #K_tensor[#4,:,:] = (H_rec[:,4:].dot(H_rec[:,:-4].T))/ (H_rec[:,4:].dot(H_rec[:,:-4].T)).sum(axis=1)[:, None]
-for i in range(2,100):
+for i in range(2,30):
    
     K_tensor[i,:,:] = (H_rec[:,i:].dot(H_rec[:,:-i].T))/ (H_rec[:,i:].dot(H_rec[:,:-i].T)).sum(axis=1)[:, None]
 
-for j in range(2,100):
+for j in range(2,30):
     tmp_infgen = infgen_3ways(K_tensor[:j])[2]
+    print(np.round(tmp_infgen,3))
     infgen = infgen_3ways(K_tensor )
 
     list_no.append(1/np.mean(abs(infgen[1]/tmp_infgen)))
  #%%   
-plt.scatter(np.arange(2,100), list_no)
+plt.scatter(np.arange(2,30), list_no)
+plt.title("Comparison of the rate matrix \n by finite differences and Newton methods")
+plt.xlabel("degree of Newton polynomial")
+plt.ylabel("proportionality constant \n $Q_{nt}=a*Q_{fd}$")
+plt.savefig("nt-fd-scaling.pdf")
