@@ -130,7 +130,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-#plt.savefig("br-corrole-50vor-weighted-79.pdf")
+plt.savefig("br-corrole-20vor-weighted-35ps.pdf")
 
 plt.show()
 #%%
@@ -195,7 +195,7 @@ infgen = infgen_4ways(chi_k,K_pcca[:4] )
 #start with zero but remember to take it off from the lambdas in the data
 # axs[1].set_yticks([50,100,150,200,250])
 for i in range(chi_k.shape[1]):
-    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)The
     plt.scatter(data_1[95:,0],DAS[i,94:],marker= ".",color= cmap(i),label=labels[i])
     plt.xlabel("wavelength $\lambda$/nm")
     plt.title("Compounds amplitudes")
