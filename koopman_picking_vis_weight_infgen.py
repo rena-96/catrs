@@ -26,15 +26,15 @@ from infgen_4ways import infgen_4ways
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 data_1 = np.loadtxt("br_py2_exec400.txt").T
 #%%#start 500 ps
-spectrum_1 = data_1[1:, 45:]
-ts1 = data_1[0,45:]
+spectrum_1 = data_1[1:, 45:146]
+ts1 = data_1[0,45:146]
 aaa = stroboscopic_inds(ts1)
 wl = data_1[1:,0]
 #%%
 #infgen
-nclus = 5
+nclus = 4
 jumps = 3
-nstates = 50
+nstates = 20
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=nstates, jumps=jumps, picked_weights=True)
 
 #%%
@@ -67,9 +67,10 @@ T_c = S_c.dot(K_c)
 
 #%%
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
+cmap = plt.get_cmap("tab10")
 plot_spectrum_strx(spectrum_1.T,wl, ts1)
 for i in range(len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+    plt.axhline(y=picked_inds[i], color=cmap(np.argmax((chi_k)[i,:])))
 plt.show()
 #%%
 # Infgen = Newton_N(K_tens[:3], 1, 0)
@@ -106,18 +107,19 @@ plt.show()
 labels = ["A","B","C","D","E", "F","G"]
 plt.figure(figsize=(18,6))
 plt.suptitle("$\chi$ and species \n-product ansatz")
-plt.subplot(1,2,1)
+plt.subplot(1,2,2)
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.plot(data_1[95:,0],DAS[i,94:],"-.",color= color_list[i],label=labels[i])
+    plt.scatter(data_1[95:,0],DAS[i,94:],marker= ".",color= cmap(i),label=labels[i])
     plt.xlabel("wavelength $\lambda$/nm")
     plt.title("Compounds amplitudes")
+    plt.ylabel("$\Delta A$")
 plt.grid()
 plt.legend()
-plt.subplot(1,2,2)
+plt.subplot(1,2,1)
 
 for i in range(chi_k.shape[1]):
-    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= color_list[i],label=labels[i])#"$\chi$_%d"%i) 
+    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= cmap(i),label=labels[i])#"$\chi$_%d"%i) 
     
 
     plt.title(r"$\chi$ of $K(\tau)$")
@@ -128,7 +130,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-#plt.savefig("br-corrole-50vor-weighted.pdf")
+#plt.savefig("br-corrole-50vor-weighted-79.pdf")
 
 plt.show()
 #%%
@@ -154,7 +156,7 @@ plt.xlabel("$\lambda$ [nm]")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
 for i in range(len(picked_inds)):
-     plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+     plt.axhline(y=picked_inds[i], color=cmap(np.argmax((chi_k)[i,:])))
 #start with zero but remember to take it off from the lambdas in the data
 plt.yticks([50,100,150,200,250])
 plt.legend()
@@ -167,7 +169,7 @@ for i in range(jumps):
     K_pcca[i] = proj(K_tens[i],nclus, pi="uniform")
     
 infgen = infgen_4ways(chi_k,K_pcca[:4] )
-%%
+#%%
 # manyfigs, axs = plt.subplots(1,4)
 # #the spectrum
 # axs[0].imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
@@ -192,3 +194,12 @@ infgen = infgen_4ways(chi_k,K_pcca[:4] )
      # plt.axhline(y=picked_inds[i], color="black")
 #start with zero but remember to take it off from the lambdas in the data
 # axs[1].set_yticks([50,100,150,200,250])
+for i in range(chi_k.shape[1]):
+    #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
+    plt.scatter(data_1[95:,0],DAS[i,94:],marker= ".",color= cmap(i),label=labels[i])
+    plt.xlabel("wavelength $\lambda$/nm")
+    plt.title("Compounds amplitudes")
+    plt.ylabel("$\Delta A$")
+    plt.grid()
+    plt.legend()
+    plt.show()
