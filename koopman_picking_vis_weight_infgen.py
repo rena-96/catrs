@@ -25,7 +25,7 @@ from infgen_4ways import infgen_4ways
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 data_1 = np.loadtxt("br_py2_exec400.txt").T
-#%%#start 500 ps
+#%%#start 500 ps 146
 spectrum_1 = data_1[1:, 45:146]
 ts1 = data_1[0,45:146]
 aaa = stroboscopic_inds(ts1)
@@ -104,7 +104,8 @@ plt.legend()
 plt.show()
 #%%
 
-labels = ["A","B","C","D","E", "F","G"]
+labels = ["$b_1$","$b_2$","$b_3$","$b_4$","$b_5$", "$B_6$","G"]
+#labels = ["A","B","C","D","E", "F","G"]
 plt.figure(figsize=(18,6))
 plt.suptitle("$\chi$ and species \n-product ansatz")
 plt.subplot(1,2,2)
@@ -130,7 +131,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-plt.savefig("br-corrole-20vor-weighted-35ps.pdf")
+plt.savefig("br-corrole-50vor-weighted-35ps.pdf")
 
 plt.show()
 #%%
