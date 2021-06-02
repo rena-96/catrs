@@ -26,8 +26,8 @@ from infgen_4ways import infgen_4ways
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 data_1 = np.loadtxt("br_py2_exec400.txt").T
 #%%#start 500 ps
-spectrum_1 = data_1[1:, 45:146]
-ts1 = data_1[0,45:146]
+spectrum_1 = data_1[1:, 45:]
+ts1 = data_1[0,45:]
 aaa = stroboscopic_inds(ts1)
 wl = data_1[1:,0]
 #%%
@@ -130,7 +130,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-plt.savefig("br-corrole-20vor-weighted-35ps.pdf")
+#plt.savefig("br-corrole-20vor-weighted-35ps.pdf")
 
 plt.show()
 #%%
@@ -155,12 +155,12 @@ plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
 plt.xlabel("$\lambda$ [nm]")
 plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
-for i in range(len(picked_inds)):
-     plt.axhline(y=picked_inds[i], color=cmap(np.argmax((chi_k)[i,:])))
-#start with zero but remember to take it off from the lambdas in the data
+# for i in range(len(picked_inds)):
+#      plt.axhline(y=picked_inds[i], color=cmap(np.argmax((chi_k)[i,:])))
+# #start with zero but remember to take it off from the lambdas in the data
 plt.yticks([50,100,150,200,250])
 plt.legend()
-# plt.savefig("poster4.pdf")
+plt.savefig("br-spectrum.pdf")
 #%%
 #transform K tens with pcca+
 K_pcca = np.zeros((jumps,nclus,nclus))
