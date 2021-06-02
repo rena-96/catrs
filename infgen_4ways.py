@@ -11,9 +11,9 @@ from scipy.optimize import fmin
 from cmdtools.estimation.newton_generator import Newton_N
 import matplotlib.pyplot as plt
 
-def logm_infgen(K_tensor, tau=1):
+def logm_infgen(K_tensor, tau = 1.):
     
-    return(logm(K_tensor[tau,:,:])/float(tau))
+    return(logm(K_tensor[1,:,:])/float(tau))
 
 def fin_diff_infgen(K_tensor, tau=1):
     

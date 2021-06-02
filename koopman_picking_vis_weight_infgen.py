@@ -20,27 +20,27 @@ from sklearn.neighbors import NearestNeighbors
 import networkx
 from check_commutator import check_commutator
 from reduction_projection import proj, rebinding
-from infgen_4ways import infgen_4ways
+from infgen_4ways import infgen_3ways
 #%%
 
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 data_1 = np.loadtxt("br_py2_exec400.txt").T
-<<<<<<< HEAD
-#%%#start 500 ps
+# <<<<<<< HEAD
+# #%%#start 500 ps
+# spectrum_1 = data_1[1:, 45:]
+# ts1 = data_1[0,45:]
+# =======
+#%%#start 500 ps 146
 spectrum_1 = data_1[1:, 45:]
 ts1 = data_1[0,45:]
-=======
-#%%#start 500 ps 146
-spectrum_1 = data_1[1:, 45:146]
-ts1 = data_1[0,45:146]
->>>>>>> ab764473d418df46488b3bc0f92a3317481dc215
+# >>>>>>> ab764473d418df46488b3bc0f92a3317481dc215
 aaa = stroboscopic_inds(ts1)
 wl = data_1[1:,0]
 #%%
 #infgen
-nclus = 4
-jumps = 3
-nstates = 20
+nclus = 5
+jumps = 4
+nstates = 50
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1.T, ts1, w=10**7/wl, nstates=nstates, jumps=jumps, picked_weights=True)
 
 #%%
@@ -137,11 +137,9 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-<<<<<<< HEAD
+
 #plt.savefig("br-corrole-20vor-weighted-35ps.pdf")
-=======
-plt.savefig("br-corrole-50vor-weighted-35ps.pdf")
->>>>>>> ab764473d418df46488b3bc0f92a3317481dc215
+#>>>>>>> ab764473d418df46488b3bc0f92a3317481dc215
 
 plt.show()
 #%%
@@ -176,10 +174,13 @@ plt.savefig("br-spectrum.pdf")
 #transform K tens with pcca+
 K_pcca = np.zeros((jumps,nclus,nclus))
 for i in range(jumps):
-    
+    print(i)
     K_pcca[i] = proj(K_tens[i],nclus, pi="uniform")
-    
-infgen = infgen_4ways(chi_k,K_pcca[:4] )
+ #%%   
+infgen = infgen_3ways(K_pcca )
+taus = []
+for j in range(3):
+    taus.append(1/infgen[j].diagonal())
 #%%
 # manyfigs, axs = plt.subplots(1,4)
 # #the spectrum
