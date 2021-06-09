@@ -21,9 +21,9 @@ ts = file["t"]
 #%%
 spectrum = np.nanmean(data_1, axis=2)
 #start analysis at 300 fs and 300 ps  and  400-700 nm circa
-ts = ts[46:]*0.001
+ts = ts[46:(183+46)]*0.001
 wl = wl[500:1448]
-spectrum = spectrum[46:,500:1448]
+spectrum = spectrum[46:(183+46),500:1448]
 ts_inds = stroboscopic_inds(ts)
 spectrum = spectrum[ts_inds]
 nclus = 5
@@ -37,7 +37,7 @@ M_rec, W_rec, H_rec, P_rec, A_opt, Chi, UitGramSchmidt = nmf(spectrum.T,r=nclus,
 #%%
 plt.figure(figsize=(15,4))
 plt.suptitle('MF with PCCA+ analysis', fontsize=16)
-labels= ["A","B","C", "D", "E", "F", "G"]
+labels= ["$c_1$","$c_2$","$c_3$", "$c_4$", "$c_5$", "F", "G"]
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 cmap = plt.get_cmap("tab10")
 plt.subplot(1, 2, 1)
@@ -52,7 +52,7 @@ plt.xlabel("t[ps]")#"$\lambda$/nm")
 plt.ylabel("concentration proportion")
 plt.subplot(1, 2, 2)
 plt.title("Plot $W$")
-for i in [0,1,2,3,4]:
+for i in [1,2,3,4,0]:
     
     plt.scatter(np.arange(len(wl)),W_rec.T[i], marker=".", color=cmap(i), label=labels[i])
 plt.xticks(np.arange(len(wl), step=100),labels=(np.round(wl[1::100])))

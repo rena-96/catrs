@@ -33,16 +33,16 @@ ts = file["t"]
 #%%
 spectrum_1 = np.nanmean(data_1, axis=2)
 #start analysis at 300 fs and 300 ps  and  400-700 nm circa
-ts = ts[46:]*0.001
+ts = ts[46:(198+46)]*.001
 wl = wl[500:1448]
-spectrum_1 = spectrum_1[46:,500:1448]
+spectrum_1 = spectrum_1[46:(198+46),500:1448]
 aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
 nclus = 4
-jumps = 5
-nstates = 60
+jumps = 2
+nstates = 20
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl, picked_weights=True)
 #%%
 plt.imshow(spectrum_infgen, cmap="coolwarm", aspect="auto")
@@ -108,7 +108,7 @@ plt.show()
 # Infgen_c_hard = pinv(hard_chi(chi_infgen)).dot(Infgen.dot(hard_chi(chi_infgen)))
 # print(1/Infgen_c_hard.diagonal(), 1/logm(K_c_hard).diagonal(),1/(K_c_hard-np.ones(K_c.shape[0])).diagonal())
 #%%
-labels = ["A","B","C","D","E", "F", "G", "H´"]
+labels = ["$D_1$","$D_2$","$D_3$","$D_4$","$D_5$", "F", "G", "H´"]
 for i in range(chi_k.shape[1]):
     plt.plot(ts[aaa[picked_inds]],chi_k_hard[:,i], "-o", color= cmap_states(i),label=labels[i])#"$\chi$_%d"%i) 
     
@@ -156,7 +156,7 @@ for i in range(chi_k.shape[1]):
     plt.legend()
     plt.show()
 #%%
-labels = ["A","B","C","D","E", "F","G"]
+labels = ["$d_1$","$d_2$","$d_3$","$d_4$","E", "F","G"]
 plt.figure(figsize=(18,6))
 plt.suptitle("$\chi$ and species \n-product ansatz")
 plt.subplot(1,2,2)
@@ -182,7 +182,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-#lt.savefig("sb-corrole-30vor-50ps.pdf")
+plt.savefig("sb-corrole-30vor-50ps.pdf")
 
 plt.show()
 # plt.show()
