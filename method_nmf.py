@@ -27,7 +27,7 @@ def make_Uit(M, r, weight):
         s= ordered singular values
         U= left singular vectors
         Uit= constant vec + r-1 dominant left singular vectors '''
-    U, s, _ = svd(M.T)
+    U, s, _ = svd(M.T, full_matrices=False)
     if weight==False:
         Uit = np.vstack((np.ones(np.shape(U)[0]), U[:, :(r-1)].T))
     else:

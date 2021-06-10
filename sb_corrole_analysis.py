@@ -182,7 +182,7 @@ plt.grid()
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
-plt.savefig("sb-corrole-30vor-50ps.pdf")
+#plt.savefig("sb-corrole-30vor-50ps-new.pdf")
 
 plt.show()
 # plt.show()
