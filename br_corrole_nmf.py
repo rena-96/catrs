@@ -15,9 +15,9 @@ from infgen_4ways import infgen_3ways
 #%%
 data = np.loadtxt('br_py2_exec400.txt')
 #%% 157 for 70 ps
-spectrum = data[45:157,1:]#before was 102 for the time
+spectrum = data[45:,1:]#before was 102 for the time
 wl = data[0,1:]
-ts = data[45:157, 0]
+ts = data[45:, 0]
 ts_inds = stroboscopic_inds(ts)
 spectrum = spectrum[ts_inds,:]
 

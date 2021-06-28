@@ -177,10 +177,10 @@ for i in range(jumps):
     print(i)
     K_pcca[i] = proj(K_tens[i],nclus, pi="uniform")
  #%%   
-infgen = infgen_3ways(K_pcca )
+infgen = infgen_3ways(K_pcca[:2] )
 taus = []
 for j in range(3):
-    taus.append(1/infgen[j].diagonal())
+    taus.append(infgen[j].diagonal())
 #%%
 # manyfigs, axs = plt.subplots(1,4)
 # #the spectrum

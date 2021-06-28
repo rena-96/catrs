@@ -8,9 +8,10 @@ Created on Fri Jun 26 14:36:57 2020
 import numpy as np
 import matplotlib.pyplot as plt
 from method_nmf import nmf
-from scipy.linalg import logm, svd
+from scipy.linalg import logm, svd, pinv
 from reduction_projection import rebinding_nmf
 from tools import stroboscopic_inds
+from infgen_4ways import infgen_3ways
 #%%
 # data_1 = np.loadtxt('iso_br_al_cor_py2_400nm_ex_ir.txt').T
 file = np.load("SB_corrole_400nm.npz")
@@ -20,10 +21,10 @@ ts = file["t"]
 
 #%%
 spectrum = np.nanmean(data_1, axis=2)
-#start analysis at 300 fs and 300 ps  and  400-700 nm circa
-ts = ts[46:(183+46)]*0.001
+#start analysis at 300 fs and 300 ps  and  400-700 nm circa (183+46)
+ts = ts[46:]*0.001
 wl = wl[500:1448]
-spectrum = spectrum[46:(183+46),500:1448]
+spectrum = spectrum[46:,500:1448]
 ts_inds = stroboscopic_inds(ts)
 spectrum = spectrum[ts_inds]
 nclus = 5
@@ -103,3 +104,17 @@ for i in range(len(Chi.T)):
     plt.ylim(np.amin(W_rec),np.amax(W_rec))
     plt.grid()
     plt.show()
+    #%%
+jumps = 4
+K_jump = np.zeros((jumps,nclus,nclus))
+K_jump[0] = np.dot(pinv(H_rec.T),H_rec.T)
+K_jump[1] = P_rec
+for i in range(2,jumps):
+    K_jump[i] = np.dot(pinv(H_rec[:, :-i:i].T),H_rec[:, i::i].T)
+    #%%
+
+
+infgen = infgen_3ways(K_jump)
+taus = []
+for j in range(3):
+    taus.append(1/infgen[j].diagonal())
