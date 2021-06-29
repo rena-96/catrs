@@ -20,7 +20,8 @@ from cmdtools.estimation.newton_generator import Newton_N
 from sklearn.neighbors import NearestNeighbors
 import networkx
 from check_commutator import check_commutator
-from reduction_projection import rebinding
+from reduction_projection import rebinding, proj
+from infgen_4ways import infgen_3ways
 #%%
 
 
@@ -32,16 +33,16 @@ ts = file["t"]
 
 #%%
 spectrum_1 = np.nanmean(data_1, axis=2)
-#start analysis at 300 fs and 300 ps  and  400-700 nm circa
-ts = ts[46:(198+44)]*.001
+#start analysis at 300 fs and 300 ps  and  400-700 nm circa (198+44)
+ts = ts[46:]*.001
 wl = wl[500:1448]
-spectrum_1 = spectrum_1[46:(198+44),500:1448]
+spectrum_1 = spectrum_1[46:,500:1448]
 aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
 nclus = 4
-jumps = 2
+jumps = 4
 nstates = 30
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl, picked_weights=True)
 #%%
@@ -51,7 +52,7 @@ plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 #plt.xticks(np.arange(wl[0],wl[-1], step=-120))
         #start with zero but remember to take it off from the lambdas in the data
-plt.yticks([0,10,20,30,40,50])#,100,150,200,250])
+#plt.yticks([0,10,20,30,40,50])#,100,150,200,250])
         
 plt.colorbar()
 #plt.savefig("sb_spectrum_250ps.svg")
@@ -212,14 +213,24 @@ plt.ylabel("delay time [ps]")
 plt.xticks(np.arange(len(wl), step=120),labels=np.round(wl[1::120]))
 
        #start with zero but remember to take it off from the lambdas in the data
-plt.yticks(np.arange(0,1200, step=50))
+plt.yticks(np.arange(0,1200, step=100))
 #plt.yticks([0,10,20,30,40,50])       
 plt.colorbar()
-for i in range(23,len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=cmap_states(np.argmax((chi_k)[i,:])), label=labels[np.argmax((chi_k)[i,:])])
-for i in range(30):
-    plt.axhline(y=fast_picked[i], color=cmap_states(fast_chi[i]+3), label=labels[fast_chi[i]+3], lw=3)
-plt.yscale("log")        
-plt.legend()
-#lt.savefig("sb_corrole_chi_50vor_250ps.pdf")
+# for i in range(23,len(picked_inds)):
+#     plt.axhline(y=picked_inds[i], color=cmap_states(np.argmax((chi_k)[i,:])), label=labels[np.argmax((chi_k)[i,:])])
+# for i in range(30):
+#     plt.axhline(y=fast_picked[i], color=cmap_states(fast_chi[i]+3), label=labels[fast_chi[i]+3], lw=3)
+# plt.yscale("log")        
+#plt.legend()
+#plt.savefig("sb_corrole_all_thesis.pdf")
 plt.show()
+#%%
+#transform K tens with pcca+
+K_pcca = np.zeros((jumps,nclus,nclus))
+for i in range(jumps):
+    print(i)
+    K_pcca[i] = proj(K_tens[i],nclus, pi="uniform")
+infgen = infgen_3ways(K_pcca[:2] )
+taus = []
+for j in range(3):
+    taus.append(1/infgen[j].diagonal())
