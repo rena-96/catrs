@@ -34,15 +34,15 @@ ts = file["t"]
 #%%
 spectrum_1 = np.nanmean(data_1, axis=2)
 #start analysis at 300 fs and 300 ps  and  400-700 nm circa (198+44)
-ts = ts[46:]*.001
+ts = ts[46:(198+44)]*.001
 wl = wl[500:1448]
-spectrum_1 = spectrum_1[46:,500:1448]
+spectrum_1 = spectrum_1[46:(198+44),500:1448]
 aaa = stroboscopic_inds(ts)
 
 #%%
 #infgen
 nclus = 4
-jumps = 4
+jumps = 2
 nstates = 30
 spectrum_infgen, picked_inds,centers, K_tens, indices, distances = Koopman(spectrum_1, ts,jumps=jumps, nstates=nstates, w=10**7/wl, picked_weights=True)
 #%%
