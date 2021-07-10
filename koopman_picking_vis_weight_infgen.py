@@ -8,6 +8,7 @@ Created on Tue Sep 22 12:08:06 2020
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.gridspec import GridSpec
 import os
 from scipy.linalg import svd, pinv, logm, eig
 from sklearn.cluster import KMeans
@@ -74,10 +75,12 @@ T_c = S_c.dot(K_c)
 #%%
 color_list = ["r", "deepskyblue", "fuchsia", "gold","darkgreen","coral","black"]
 cmap = plt.get_cmap("tab10")
-plot_spectrum_strx(spectrum_1.T,wl, ts1)
-for i in range(len(picked_inds)):
-    plt.axhline(y=picked_inds[i], color=cmap(np.argmax((chi_k)[i,:])))
+plot_spectrum_strx(spectrum_1.T,wl, ts1,step_=120)
+plt.savefig("br-spectrum.pdf")
+# for i in range(len(picked_inds)):
+#     plt.axhline(y=picked_inds[i], color=cmap(np.argmax((chi_k)[i,:])))
 plt.show()
+
 #%%
 # Infgen = Newton_N(K_tens[:3], 1, 0)
 # eig_infgen =  np.sort(np.linalg.eigvals(Infgen))
@@ -110,37 +113,42 @@ plt.legend()
 plt.show()
 #%%
 
-labels = ["$b_1$","$b_2$","$b_3$","$b_4$","$b_5$", "$B_6$","G"]
+labels = ["$B_1$","$B_2$","$B_3$","$B_4$","$B_5$", "$B_6$","G"]
 #labels = ["A","B","C","D","E", "F","G"]
-plt.figure(figsize=(18,6))
+fig= plt.figure(figsize=(7,20))
 plt.suptitle("$\chi$ and species \n-product ansatz")
-plt.subplot(1,2,2)
+gs=GridSpec(2,1)
+
+ax1=fig.add_subplot(gs[0,0])
+ax2=fig.add_subplot(gs[1,0])
+
 for i in range(chi_k.shape[1]):
     #plt.plot(ts1,Chi[:,i], label="$NMF-\chi$_%d"%i)
-    plt.scatter(data_1[95:,0],DAS[i,94:],marker= ".",color= cmap(i),label=labels[i])
-    plt.xlabel("wavelength $\lambda$/nm")
-    plt.title("Compounds amplitudes")
-    plt.ylabel("$\Delta A$")
-plt.grid()
-plt.legend()
-plt.subplot(1,2,1)
+    ax2.scatter(data_1[95:,0],DAS[i,94:],marker= ".",color= cmap(i),label=labels[i])
+    ax2.set_xlabel("wavelength $\lambda$/nm")
+    ax2.set_title("Compounds amplitudes")
+    ax2.set_ylabel("$\Delta A$")
+ax2.grid()
+ax2.legend()
+#plt.subplot(2,2,1)
 
 for i in range(chi_k.shape[1]):
-    plt.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= cmap(i),label=labels[i])#"$\chi$_%d"%i) 
+    ax1.plot(ts1[aaa[picked_inds]],chi_k[:,i], "-o", color= cmap(i),label=labels[i])#"$\chi$_%d"%i) 
     
 
-    plt.title(r"$\chi$ of $K(\tau)$")
-    plt.ylabel("concentration")
-    plt.xlabel("time/ps")
-plt.legend(ncol=5)
-plt.grid()  
+    ax1.set_title(r"$\chi$ of $K(\tau)$")
+    ax1.set_ylabel("membership")
+    ax1.set_xlabel("time/ps")
+ax1.legend(ncol=1)
+ax1.grid()  
 plt.xscale("linear")  
 #plt.xticks(ticks=aaa[::15])#, labels=(aaa[picked_inds])[::5])
 
 
+
 #plt.savefig("br-corrole-20vor-weighted-35ps.pdf")
 #>>>>>>> ab764473d418df46488b3bc0f92a3317481dc215
-
+gs.tight_layout()
 plt.show()
 #%%
 # K_c_hard =  pinv(chi_k_hard).dot(K.dot(chi_k_hard))#/ (pinv(chi_k).dot(chi_k)))

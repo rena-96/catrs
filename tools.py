@@ -96,7 +96,7 @@ def voronoi_koopman(X, centers,nstates, timeseries, dt):
 
     
     
-def plot_spectrum_strx(X, ls,ts, step_=60, strobox=True):
+def plot_spectrum_strx(X, ls,ts, step_=100, strobox=True):
     """X: spectrum, ls=wavelengths,ts=time"""
     if strobox==True:
         strobox = stroboscopic_inds(ts)

@@ -180,19 +180,20 @@ plt.show()
 #%%
 check_commutator(K,nclus=5)
 #%%
-# #ts_new = ts[strobox]
-# #step_ = int(len(ts_new)/10)
-# plt.figure(figsize=(7,6))
-# plt.imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
-# plt.colorbar()
-# plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
-# plt.xlabel("$\lambda$ [nm]")
-# plt.ylabel("delay time [ps]")
-# plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
-# #for i in range(len(picked_inds)):
-#  #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
-# #start with zero but remember to take it off from the lambdas in the data
-# plt.yticks([50,100,150,200,250])
+#ts_new = ts[strobox]
+#step_ = int(len(ts_new)/10)
+plt.figure(figsize=(7,6))
+plt.imshow(spectrum_infgen, cmap="coolwarm",aspect = "auto", alpha=0.8)
+plt.colorbar()
+plt.title("Pump-probe spectrum of brominated \n aluminium corrole exec.400nm")
+plt.xlabel("$\lambda$ [nm]")
+plt.ylabel("delay time [ps]")
+plt.xticks(np.arange(len(wl), step=60),labels=np.round(wl[1::60]))
+#for i in range(len(picked_inds)):
+  #   plt.axhline(y=picked_inds[i], color=color_list[np.argmax((chi_k)[i,:])])
+#start with zero but remember to take it off from the lambdas in the data
+plt.yticks([50,100,150,200,250])
+plt.savefig("br-spectrum.pdf")
 #%%
 #transform K tens with pcca+
 
