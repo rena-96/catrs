@@ -31,7 +31,7 @@ ts1 = data_1[0,45:]
 aaa = stroboscopic_inds(ts1)
 wl = data_1[1:,0]
 #%%
-#infgen
+
 nclus = 5
 jumps = 2
 nstates = 20
